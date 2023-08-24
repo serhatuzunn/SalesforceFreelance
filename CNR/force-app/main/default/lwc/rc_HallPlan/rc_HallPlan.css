@@ -1,0 +1,224 @@
+.maindiv {
+/*background-image: URL("/resource/RC_HallPlanSources/src/img/HALL8.png");*/
+background-position:6px 11px;
+background-repeat: no-repeat;
+text-align: center;
+height: 100%;
+/*height: 800px !important;*/
+float:left;
+width: 50%;
+border:1px solid;
+}
+.divAllContent{
+overflow: hidden;list-style-type: none;
+margin: 0;
+padding: 0;
+}
+.floorplan {
+opacity: 0.3;
+background: #ebecec;
+position: relative;
+width: 100%;
+height: 100%;
+}
+.currentDiv{
+
+width: 33%;
+float:left;
+}
+.room {
+border: 1px solid #ee7538;
+/*background: #fff;*/
+color: #000;
+display: block;
+position: absolute;
+height: 10px;
+width: 10px;
+font-size:8px;
+}
+
+.room:hover {
+background: #ee7538;
+color: #fff;
+}
+
+.slctd {
+background: red;
+}
+
+.notselectable {
+background: #000;
+}
+
+.borderLeft {
+border-left: 1px solid yellow;
+}
+
+.borderRgt {
+border-right: 2px solid yellow;
+}
+
+.borderUp {
+border-top: 1px solid yellow;
+}
+
+.borderDown {
+border-bottom: 2px solid yellow;
+}
+.panel{
+border: 1px solid lightblue;
+padding: 1%;
+border-radius: 5px;
+}
+button{
+border: none !important;
+border-radius: 5px !important;
+width: 80px !important;
+height: 25px !important;
+color: black !important;
+background-color: white !important;
+font-family: sans-serif !important;
+font-size: 11px !important;
+margin-top: 11% !important;
+cursor:pointer !important;
+background-image: none !important;
+}
+
+div{
+font-family: sans-serif;
+}
+.currentTool{
+font-size: 14px;
+font-weight: bolder;
+margin-left:40%;
+}
+
+.currentMode{
+font-size: 14px;
+font-weight: bolder;
+margin-left:40%;
+}
+.headerDiv{
+padding: 1%;
+margin-left: 12%;
+}
+ul {
+list-style-type: none;
+margin: 0;
+padding: 0;
+overflow: hidden;
+}
+
+li {
+float: left;
+border-right: 1px solid;
+color: black;
+height: 50px;
+text-align: center;
+width:10%;
+}
+li a {
+display: block;
+color: white;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
+font-weight: 500;
+font-size: .8rem;
+color: #fff;
+height: var(--nav-height);
+padding: .5rem;
+position: relative;
+display: -webkit-box;
+display: flex;
+-webkit-box-orient: vertical;
+-webkit-box-direction: normal;
+flex-direction: column;
+-webkit-box-align: center;
+align-items: center;
+-webkit-box-pack: center;
+justify-content: center;
+text-align: center;
+border-right: 1px solid #201c29;
+-webkit-transition: .1s;
+transition: .1s;
+}
+.selection {
+    position: absolute;
+    border: 1px solid #89B;
+    background: #BCE;
+    background-color: #BEC;
+    border-color: #8B9;
+}
+
+.size2 {
+    height: 118px;
+    line-height: 118px;
+}
+
+.size3 {
+    height: 178px;
+    line-height: 178px;
+}
+
+.drop {
+    float: left;
+    border: 1px dashed #888;
+    background: #EEE;
+    text-align: center;
+    padding: 20px;
+    margin: 0 10px 10px 0;
+}
+
+.dropped {
+    background-color: #EBC;
+    border-color: #B89;
+}
+
+.active {
+    background-color: #CEB;
+    border-color: #9B8;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    padding-top: 200px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    height:50%
+}
+
+.close {
+/* The Close Button */
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+/* Change the link color to #111 (black) on hover */

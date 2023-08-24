@@ -1,0 +1,18 @@
+<apex:page controller="RC_PortalController" >
+    <apex:includeLightning />
+    <img src="{!URLFOR($Resource.RC_PortalResources, '/LoginBackGround/standart.png')}" alt="" style="width:100%;position:relative;max-height:-webkit-fill-available;"/>
+    <div id="context" />
+    <script>
+    var session = "{!$API.Session_ID}";
+    $Lightning.use("c:RC_PortalApp", function() {
+        debugger;
+        $Lightning.createComponent(
+            "c:RC_UserLogin",
+            {Session:session},
+            "context",
+            function(cmp) {
+                console.log(cmp);
+            });
+    });
+    </script>
+</apex:page>

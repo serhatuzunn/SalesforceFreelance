@@ -1,0 +1,173 @@
+@media screen and (max-width: 1024px) {
+    .THIS .forceStyle.desktop .asyncCarouselIndicator,.THIS .forceStyle.desktop .forceRecordHome,.THIS .forceStyle.desktop .oneContent {
+        overflow: auto !important;
+    }
+    
+    .THIS .res-All{
+        display: block!important;
+    	width: 21px;
+    }
+    
+    .THIS .head-all{
+        display: flex!important;
+    	margin-bottom: 5px;
+    	font-size: 10px;
+    	float: right;
+    }
+    
+    .THIS .res-all{
+        margin-top:2px !important;
+    }
+    
+    .THIS .respCbxTD {
+        float: left !important;
+    }
+    
+    .THIS .slds-tabs_default__item{
+        padding-right: 15px !important;
+    }    
+    .THIS .respSelect50{
+        width:50% !important;
+    }
+    .THIS .respSelect100{
+        width:100% !important;
+    }
+    .THIS select > option {
+        font-size: 10px !important;
+    }
+    .THIS .slds-modal__container {
+        width: 100% !important;
+    }
+    .THIS .slds-pill {
+        padding: 5px !important;
+        font-size: 10px !important;        
+    }
+    
+    
+    
+    .THIS table {
+        border: 0;
+    }
+    
+    .THIS table caption {
+        font-size: 1.3em;
+    }
+    
+    .THIS table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    
+    .THIS  table tr {
+        border-bottom: 3px solid #ddd;
+        display: grid;
+        margin-bottom: .625em;
+    }
+    
+    
+    .THIS table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+    
+    .THIS table td::before {
+        /*
+        * aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .THIS table td:last-child {
+        border-bottom: 0;
+    }
+    
+} 
+
+@media only screen and (max-width: 1200px) and (min-width: 1025px) {
+    .THIS .res-All{
+        display: block!important;
+    	width: 21px;
+    } 
+    
+    .THIS .head-all{
+        display: none !important;
+    }
+    
+}
+
+ 
+
+.THIS .head-all{
+   display:none;
+} 
+
+.THIS section{
+    height: 100% !important;
+    background: white; 
+}
+
+.THIS .slds-scrollable {
+    -webkit-overflow-scrolling: touch;
+    overflow: auto;
+    max-height: 500px;
+}
+
+.THIS .slds-pill {
+    padding : 10px            
+}
+
+.THIS .horizontalCenter{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.THIS .slds-tabs_default__item.slds-is-active {
+    background-color: aliceblue;
+    text-decoration : none !important;
+    
+}
+.THIS li.slds-tabs_default__item:hover {
+    background-color: aliceblue;
+}
+
+.THIS .slds-tabs_default__item{
+    padding-right: 60px;
+}
+
+.THIS .slds-form-element__label {
+    font-weight: 700;
+}
+
+.THIS .dispFlex{
+    display: flex;
+}
+
+.THIS .verticalLineRight {
+    border-right: 1px solid black;
+    height: 200px;
+    position: relative;
+    top: 60px;
+    right: 40px;
+}
+
+.THIS .sektorKirilimiButtonMargin{
+    margin-top: 16%;
+    margin-left: -100%;
+}
+
+.THIS .borderRgt{
+    border-right: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));
+}

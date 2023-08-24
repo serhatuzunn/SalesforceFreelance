@@ -1,0 +1,125 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="RC_PaymentPlanController" >    
+    
+    <aura:attribute name="paymentPlanInstance" type="RC_Payment_Plan__c"/>
+    <aura:attribute name="cashPayment" type="boolean" default="false"/>
+    <aura:attribute name="rowIndex" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- Register 2 Lightning Event for handle add or Delete rows on Parent Component  --> 
+    <aura:registerEvent name="DeleteRowEvt" type="c:DeleteRowEvt"/> 
+    <aura:registerEvent name="AddRowEvt" type="c:AddNewRowEvt"/> 
+    <aura:attribute name="paymentTypeList" type="sObject" default="[]" />
+    <aura:attribute name="moneyOrder" type="boolean" default="false"/>
+    <aura:attribute name="approvalStage" type="string" default=""/>
+    <aura:attribute name="userProfile" type="string" default=""/>
+    <aura:attribute name="disabled" type="boolean" default="true"/>
+    <aura:attribute name="checkDisabledSales" type="boolean" default="true"/>
+    <aura:attribute name="checkDisabledCollector" type="boolean" default="true"/>
+    <aura:attribute name="checkDisabledFinance" type="boolean" default="true"/>
+    <aura:attribute name="disabledCheckBox" type="boolean" default="true"/>
+    <aura:attribute name="fixedPayValue" type="boolean" default="false"/>
+    <aura:attribute name="currencyIsoCode" type="string" default=""/>
+    
+    <!-- Table Row -->   
+    
+    
+    
+    
+    <tr  class="slds-text-title_caps">
+        <td> 
+            <aura:if isTrue="{!v.paymentPlanInstance.RC_Installment__c==1}">
+                Peşinat
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.paymentPlanInstance.RC_Is_Tax__c==true}">
+                        KDV
+                        <aura:set attribute="else">
+                            {!v.rowIndex +1}   
+                        </aura:set>
+                    </aura:if>
+                    
+                </aura:set>
+            </aura:if>
+            
+            
+        </td>
+        <td>
+            <aura:if isTrue="{!v.paymentPlanInstance.RC_Payment_Type__c=='Note'}">
+                <span>*</span><br/>
+                   <ui:inputCurrency disabled="{!v.paymentPlanInstance.RC_Installment__c==1}"  required="true" format="0.00" aura:id="amount" class="field uiInput" value="{!v.paymentPlanInstance.RC_Payment_Amount__c}"  updateOn="keyup"/>
+
+
+            </aura:if>
+            <aura:if isTrue="{!not(v.paymentPlanInstance.RC_Payment_Type__c=='Note')}">
+                 <span>*</span><br/>
+              <ui:inputCurrency required="true" format="0.00"  aura:id="amount"  class="field uiInput" value="{!v.paymentPlanInstance.RC_Payment_Amount__c}" updateOn="keyup"/>
+            </aura:if>
+        </td>
+        <td>
+            <lightning:input  type="date" name="input7" value="{!v.paymentPlanInstance.RC_Payment_Date__c}"  autocomplete="off" required="true" disabled="{!v.disabled || v.cashPayment}"></lightning:input>
+            
+        </td>
+        <td>
+            <lightning:select disabled="{!v.disabled || v.cashPayment}" value="{!v.paymentPlanInstance.RC_Payment_Type__c}" name="paymentType" required="true">
+                <option label="Select" value="">Select</option>
+
+                <aura:iteration var="option" items="{!v.paymentTypeList}">
+                    <aura:if isTrue="{!option.value=='Transfer'}">
+                    <aura:if isTrue="{!v.moneyOrder}">
+                           <option selected="{!v.paymentPlanInstance.RC_Payment_Type__c==option.value ? true : false}" label="{!$Label.c.RC_PaymentType_Transfer}" value="Transfer">{!$Label.c.RC_PaymentType_Transfer}</option>
+                             <aura:set attribute="else">
+                        		<aura:if isTrue="{!v.paymentPlanInstance.RC_Installment__c==1}">
+                                    <option selected="true" label="{!$Label.c.RC_PaymentType_Transfer}" value="Transfer">{!$Label.c.RC_PaymentType_Transfer}</option>
+                                 </aura:if>
+                                   </aura:set>
+                        </aura:if>
+                    <aura:set attribute="else">
+                            <option selected="{!v.paymentPlanInstance.RC_Payment_Type__c==option.value ? true : false}" label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                        </aura:set>
+                    </aura:if>
+                
+                </aura:iteration>
+            </lightning:select>           
+            
+            
+        </td>
+        <td>
+            <aura:if isTrue="{!v.paymentPlanInstance.RC_Installment__c==1}">
+                <lightning:input aura:id="cbxAllSales" onchange="{!c.checkAllCheckboxesSales}" type="checkbox" checked="{!v.paymentPlanInstance.RC_Sales_Person_Check__c}" value="{!v.paymentPlanInstance.RC_Sales_Person_Check__c}" name="input7" disabled="true"></lightning:input>
+                <aura:set attribute="else">
+                    <lightning:input aura:id="cbxAllSales" onchange="{!c.checkAllCheckboxesSales}" type="checkbox" checked="{!v.paymentPlanInstance.RC_Sales_Person_Check__c}" value="{!v.paymentPlanInstance.RC_Sales_Person_Check__c}" name="input7" disabled="{!v.disabledCheckBox || v.cashPayment || v.checkDisabledSales}"></lightning:input>
+                </aura:set>
+            </aura:if>
+            
+        </td>
+        <td>
+            <aura:if isTrue="{!v.paymentPlanInstance.RC_Installment__c==1}">
+    <lightning:input aura:id="cbxAllCollector" onchange="{!c.checkAllCheckboxesCollector}" type="checkbox" checked="{!v.paymentPlanInstance.RC_Collector_Check__c}" value="{!v.paymentPlanInstance.RC_Collector_Check__c}" name="input8" disabled="{!not(v.userProfile=='CNR Collector')}"></lightning:input>    
+                <aura:set attribute="else">
+                    <lightning:input aura:id="cbxAllCollector" onchange="{!c.checkAllCheckboxesCollector}" type="checkbox" checked="{!v.paymentPlanInstance.RC_Collector_Check__c}" value="{!v.paymentPlanInstance.RC_Collector_Check__c}" name="input8" disabled="{!v.disabledCheckBox || v.cashPayment || v.checkDisabledCollector}"></lightning:input>
+                </aura:set>
+            </aura:if>
+        </td>
+        <td>
+            <lightning:input aura:id="cbxAllFinance" onchange="{!c.checkAllCheckboxesFinance}" type="checkbox" name="input9" checked="{!v.paymentPlanInstance.RC_Finance_Check__c}" value="{!v.paymentPlanInstance.RC_Finance_Check__c}" disabled="{!v.disabledCheckBox || v.cashPayment || v.checkDisabledFinance}"></lightning:input>
+            
+        </td>
+        <td>
+            <lightning:input disabled="{!v.currIsoCode=='TRY'}" type="number" step="0.01" min="0" value="{!v.paymentPlanInstance.RC_Currency_Rate__c}"></lightning:input>
+        </td>
+        <td>
+            <aura:if isTrue="{!and(not(v.cashPayment),not(v.disabled))}">
+                <aura:if isTrue="{!v.rowIndex == 0}">
+                    <a onclick="{!c.AddNewRow}">
+                        <lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" size="small" alternativeText="add"/>
+                        <span class="slds-assistive-text">Add Icon</span>
+                    </a>    
+                    <aura:set attribute="else">
+                        <a onclick="{!c.removeRow}">
+                            <lightning:icon variant="error" iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                            <span class="slds-assistive-text">Delete Icon</span>
+                        </a>
+                    </aura:set> 
+                </aura:if>
+            </aura:if>
+        </td> 
+    </tr>
+</aura:component>

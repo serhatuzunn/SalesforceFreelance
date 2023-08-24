@@ -1,0 +1,17 @@
+.THIS .uiInput {
+    min-height: 30px;
+    margin-bottom: -6px;
+     min-width:90px !important; 
+
+}
+.THIS .slds-datepicker__month {
+    z-index : 999;
+}
+@media only screen and (max-width: 1400px){
+    .THIS .uiInput {
+        min-width:90px !important; 
+    }
+    .THIS .slds-datepicker__month {
+        z-index : 999;
+    }
+}

@@ -1,0 +1,188 @@
+@media screen and (max-width: 720px) {
+   .THIS .slds-grid {
+        display: inline-block !important;
+            width: 100% !important;
+    }
+    .THIS .slds-size_2-of-12,.THIS .slds-size--2-of-12 {
+        width: 100%  !important;
+        float: left !important;
+        display: none !important;
+    }
+    .THIS .cRC_PortalLeftMenu .left-menu {
+        min-height: 200px !important;
+    }
+    .THIS .slds-p-right_medium.slds-p-left_medium.slds-col.slds-size_10-of-12 {
+        display: inline-block;
+        width: 100% !important;
+    }
+    .THIS .slds-size_1-of-2,.THIS .slds-size--1-of-2 {
+        width: 100% !important;
+    }
+    .THIS .slds-size_1-of-3,.THIS .slds-size--1-of-3 {
+        width: 100% !important; 
+    }
+    .THIS.c-container {
+        display: contents !important;
+    }
+    .THIS .slds-col.slds-size_1-of-6 {
+        width: 100% !important;
+        float: left !important;
+    }
+    
+    .THIS  .turnback {
+        
+        width: 44% !important;
+    }
+    
+}
+
+.THIS .navigationlink
+{
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0 12px;
+    color: #777;
+    text-decoration: none;
+}
+.THIS .navigationlink.active
+{
+    color: #566cb7 !important;
+}
+
+.THIS.c-container {
+    border: 1px solid #d8dde6;
+    background: #bacbe4;
+    padding-left: 1%;
+    padding-right: 1%;
+    padding-bottom: 1%;
+    padding-top: 1%;
+    min-height: 100%;
+    width: 100%;
+}
+
+.THIS .main-container{
+    background: white; 
+    min-height: 100%;
+    height: 100%;
+    width: 100%;
+}
+
+.THIS .page-section {
+    padding: 1rem;
+    color:rgba(0, 0, 0, 0.87);
+    box-sizing: border-box;
+}
+
+.THIS .page-section p {
+    margin-top: 20px;
+    margin-bottom: 0;
+    line-height: 20px;
+}
+
+.THIS .page-section h2{
+    font-size: 2.28rem;
+    line-height: 110%;
+    margin: 1.52rem 0 0.912rem 0;
+    font-weight: 400;
+}
+
+.THIS .page-main {
+    background: #f8f8f8;
+}
+
+.THIS .form-control{
+    width: 100%;
+    float:left;
+    line-height: 30px;
+    margin: 5px;
+    padding-right: 5px;
+}
+
+.THIS .form-control label {
+    font-size: 13px;
+}
+
+.THIS .width_1-3{
+    width:33% !important;
+}
+
+.THIS .slds-form-element__label {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+}
+
+
+.THIS .slds-p-right_medium {
+    padding-right: 0px;
+}
+
+.THIS .button{
+    height: 35px;
+    margin-top: 40px;
+    margin-left: 5px;
+}
+
+.THIS .approved {
+    width: 80px;
+    height: 80px;
+    background: #376bcc;
+    border-radius: 3px 3px 10px -1px;
+    color: #fff;
+    font-size: 32px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 80px; 
+}
+.THIS .turnback {
+    color: #376bcc;
+	position: absolute;
+    border: 0;
+    margin: 20px 0 0 18px;
+    cursor:pointer;
+}
+
+.THIS .turnbackButton {
+    border:0px;
+    cursor:pointer;
+}
+
+.THIS .turnbackButton:hover {
+    background-color:white;
+    cursor:pointer;
+}
+
+.THIS .approve{
+    float:right;
+}
+
+.THIS .approveL{
+    float:left;
+    padding: 15px;
+}
+
+.THIS .approveL p{
+    font-weight: 600;
+    color: #376bcc;
+}
+
+.THIS .approveL span{
+    float: right;
+    color:#888;
+}
+
+.THIS .page-footer{
+    border-top: 1px solid #e6e6e6;
+}
+
+.THIS .dtTable{
+    /*max-height:70%;
+    width:100%; 
+    overflow-y:auto;
+    display: flex; 
+    flex-direction: column*/
+}
+
+.THIS slds-scrollable_y > div
+{
+    max-height: 385px;
+}

@@ -1,0 +1,721 @@
+.maindiv {
+			/*background-image: URL("../../src/img/HALL8.png");*/
+			/* background-position:6px 11px; */
+			background-repeat: no-repeat;
+			text-align: center;
+			height: 100% !important;
+			min-height: 750px !important;
+			float:left;
+			/* min-width: 68%; */
+			min-width: 84%;
+			width:50%;
+			border:1px solid;
+			overflow-y: scroll;
+			background-attachment: local;
+			overflow-x:scroll;
+			/* margin-left: 25%; */
+			margin-left: 15.5%;
+    		margin-top: -34.2%;
+		}
+html .brandQuaternaryBgr {
+	background: none !important;
+}
+		.rightBottomCorner
+		{
+			font-size: 14px;
+			float: right;
+			width:max-content;
+			margin-top: -5px;
+			font-weight: bold;			
+		}
+		.controlDrawButtonSelected
+		{
+			border-radius: 50%;
+			border: 1px solid #3d715b;
+			filter: invert(55%) sepia(52%) saturate(2801%) hue-rotate(98deg) brightness(104%) contrast(97%)
+		}
+		.controlEraseButtonSelected
+		{
+			border-radius: 50%;
+			border: 1px solid red;
+			filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+		}
+
+		.controlButton{
+			float: right;
+			font-size: 19px;
+			font-weight: bold;
+			margin-left: 15px;
+			cursor: pointer;
+			margin-top: 5px;
+		}
+		.soldAccountInfo
+		{
+			width: 80px;
+			color: #fff;
+			font-size: 9px;
+			position: absolute;
+			z-index: 1;
+			text-align: start;
+		}
+		.soldContainerText
+		{
+			z-index: 2;
+			/* font-size: 13px; */
+			position: sticky;
+			padding: 4px;
+			word-wrap: break-word;
+			text-align: center;
+			/* background-color: beige; */
+			/* opacity: 0.8; */
+			font-weight: bold;
+			color: white;
+			/* border: 1px solid white; */
+			overflow: hidden;
+			box-sizing: border-box;
+			font: medium monospace;
+			/* Sığmayan texte 3 nokta ile sınırlandırmak için konuldu */
+			/* white-space: nowrap; */
+		}
+		.tooltip .tooltiptext::after {
+			content: " ";
+			position: absolute;
+			top: 100%; /* At the bottom of the tooltip */
+			left: 50%;
+			margin-left: -5px;
+			border-width: 5px;
+			border-style: solid;
+			border-color: black transparent transparent transparent;
+		  }
+		.sellrevised {
+			/* background: black !important;  */
+			background: #8F006B !important;
+		}
+		.parcelSold
+		{
+			/* background: rgb(93, 124, 148) !important; 
+			border: 1px solid rgb(93, 124, 148) !important; */
+			background: #2D006B !important;
+			border: 1px solid #2D006B !important;
+		}
+		.divAllContent{
+		    overflow: hidden;list-style-type: none;
+			margin: 0;
+			padding: 0;
+		}
+		.floorplan {
+			/* opacity: 0.3; */
+			background: #ebecec;
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+		.currentDiv{
+
+			width: 33%;
+			float:left;
+		}
+		.room {
+			/*border: 1px solid #ee7538;
+			/*background: #fff;*/
+			
+			color: #000;
+			display: block;
+			position: absolute;
+			height: 10px;
+			width: 10px;
+			/* opacity: 0.6; */
+			font-size:8px;
+			padding: 1px;
+		}
+		.roomSale {
+			opacity: 1;
+			width: 22.7px !important;
+			height: 22.7px !important;
+		}
+
+		.room:hover {
+			/* background: #ee7538; */
+			background: #B580FF;
+			color: #fff;
+		}
+
+		.slctd {
+			/* background: red; */
+			background-color: #DABFFF;
+			border: 1px solid white;
+		}
+
+		.notselectable {
+			background: #000;
+		}
+
+		.borderLeft {
+			 /* border-left: 1px solid #E60066 !important;  */
+		}
+
+		.borderRgt {
+			 /* border-right: 1px solid #E60066 !important;  */
+		}
+
+		.borderUp {
+			 /* border-top: 1px solid #E60066 !important; */
+		}
+
+		.borderDown {
+			 /* border-bottom: 1px solid #E60066 !important;  */
+		}
+
+
+		.parcelborderLeft {
+			border-left: 1px solid white !important; 
+	   }
+
+	   .parcelborderRgt {
+			border-right: 1px solid white !important; 
+	   }
+
+	   .parcelborderUp {
+			border-top: 1px solid white !important;
+	   }
+
+	   .parcelborderDown {
+			border-bottom: 1px solid white !important; 
+	   }
+
+
+		.panel{
+			/* border: 1px solid lightblue; */
+			padding: 1%;
+			border-radius: 5px;
+		}
+		button{
+			border: none !important;
+			border-radius: 5px !important;
+			width: 80px !important;
+			height: 25px !important;
+			color: black !important;
+			background-color: white !important;
+			font-family: sans-serif !important;
+			font-size: 11px !important;
+			margin-left: -1px !important;
+			margin-top: 12px !important;
+			float: left;
+			cursor:pointer !important;
+			background: none !important;
+			outline: 0;
+			/*Hi SF, This is ZCK. im sorry, that was my fault!*/
+		}
+
+		div{
+		    font-family: sans-serif;
+		}
+		.currentTool{
+		    font-size: 14px;
+			font-weight: bolder;
+			margin-left:40%;
+		}
+		
+        .currentMode{
+		    font-size: 14px;
+			font-weight: bolder;
+			margin-left:40%;
+	    }
+		.headerDiv{
+			padding: 0%;
+			/* margin-left: 10%; */
+		}
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			}
+
+		li {
+			/*float: left;*/
+			/*border-right: 1px solid;*/
+			color: black;
+			height: 50px;
+			/*text-align: center;*/
+			/* width:10%; */
+			width: 15%;
+			border: 1px solid;
+			margin-left:0 !important;
+			outline: 0;
+		}
+		li a {
+			display: block;
+			color: white;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+			font-weight: 500;
+			font-size: .8rem;
+			color: #fff;
+			height: var(--nav-height);
+			padding: .5rem;
+			position: relative;
+			display: -webkit-box;
+			display: flex;
+			-webkit-box-orient: vertical;
+			-webkit-box-direction: normal;
+			flex-direction: column;
+			-webkit-box-align: center;
+			align-items: center;
+			-webkit-box-pack: center;
+			justify-content: center;
+			text-align: center;
+			border-right: 1px solid #201c29;
+			-webkit-transition: .1s;
+			transition: .1s;
+			}
+			.selection {
+				position: absolute;
+				border: 1px solid #89B;
+				background: #BCE;
+				background-color: #BEC;
+				border-color: #8B9;
+			}
+
+			.size2 {
+				height: 118px;
+				line-height: 118px;
+			}
+
+			.size3 {
+				height: 178px;
+				line-height: 178px;
+			}
+
+			.drop {
+				float: left;
+				border: 1px dashed #888;
+				background: #EEE;
+				text-align: center;
+				padding: 20px;
+				margin: 0 10px 10px 0;
+			}
+
+			.dropped {
+				background-color: #EBC;
+				border-color: #B89;
+			}
+
+			.active {
+				background-color: #CEB;
+				border-color: #9B8;
+			}
+
+			/* The Modal (background) */
+			.modal {
+				display: none;
+				/* Hidden by default */
+				position: fixed;
+				/* Stay in place */
+				z-index: 2;
+				/* padding-top: 50px; */
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+				background-color: rgb(0, 0, 0);
+				background-color:rgba(0, 0, 0, 0.87);
+			  
+			}
+			.modalParcel {
+				display: none;
+				position: fixed;
+				z-index: 3;
+				/* padding: 6%; */
+				padding-top: 15%;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+				background-color: rgb(0, 0, 0);
+				background-color: rgba(0, 0, 0, 0.4);
+			}
+			
+			.modal-title{
+				border-bottom: 1px solid darkgray;
+    			height: 52px;
+    			text-align: center;
+			}
+
+			.modal-title img{
+				height: 85%;
+				margin-left: 26px;
+			}
+
+			.parcel-modal-content{
+				align-items: center;
+				text-align: center;
+				height: 78px;
+				border-bottom: 1px solid darkgray;
+			}
+
+			.modal-footer{
+				width: 52%;
+				height: 63px;
+				margin: 0 auto;
+			}
+
+
+			 
+			/* Modal Content */
+			.modal-content {
+				background-color: #fefefe;
+				margin: auto;
+				padding: 20px;
+				border: 1px solid #888;
+				width: 20%;
+				height:20%;
+				margin-top:100px;
+				margin-bottom:100px;
+			}
+						/* Modal Content */
+						.modal-content-parcel {
+							background-color: #fefefe;
+							margin: auto;
+							padding: 1%;
+							align-items: center;
+							border: 1px solid #888;
+							width: 400px;
+							height: 187px;
+							border-radius: 20px;
+						}
+						.modal-content-parcelNo {
+							background-color: #fefefe;
+							margin: auto;
+							padding: 1%;
+							align-items: center;
+							border: 1px solid #888;
+							width: 9%;
+    						height: 2%;
+							border-radius: 20px;
+						}
+						.closeNodata{
+							color: #aaaaaa;
+    						font-size: 28px;
+    						font-weight: bold;
+    						position: absolute;
+    						padding-bottom: 6%;
+   							 margin-top: -8px;
+   							 margin-left: 9px;
+						}
+						.nodata{
+							background-color:red;
+						}
+
+
+						.parcelInput{
+							border: 0;
+							margin: 0 auto;
+							background-color: #fff;
+							height: 30px;
+							margin-top: 8px;
+							width: 69%;
+							font-size: 16px;
+							border-bottom: 1px solid gray;
+							padding-left: 5px;
+						}
+
+						.parcelInput:focus{
+							border: 0;
+							outline: 0;
+							box-shadow:0 6px 6px -5px rgba(35, 173, 255, 1);
+							transition: all 200ms ease-out;
+						}
+
+						.parcelButton{
+							border:1px solid !important;
+							background-color:#400099 !important;
+							color:white !important;
+							height: 37px !important;
+							width: 100px !important;
+							outline: 0;
+						}
+
+						.parcelRemoveButton{
+							float:unset !important;
+							outline: 0;
+						}
+
+						.parcelCancelButton{
+							border:1px solid !important;
+							background-color:#400099 !important;
+							color:white !important;
+							height: 37px !important;
+							width: 100px !important;
+							float: right;
+						}
+						.textParcel{
+							font-size:13px;
+							font-weight: 700;
+							/* color:red; */
+							color: black;
+							word-break: break-word;
+						}
+
+						.labelParcel{
+							font-size: 15px;
+    						font-weight: 700;
+    						color: black;
+							word-break: break-all;
+							margin-top: 13px;
+							display: block;
+						}
+
+						.deleteLabel{
+							font-size: 16px !important;
+						}
+
+						.deleteContentDiv{
+							margin:0 auto;
+							padding-top:24px;
+						}
+			.close {
+			/* The Close Button */
+				color: #aaaaaa;
+				float:right;
+				font-size: 28px;
+				font-weight: bold;
+				margin-left: 15px;
+			}
+
+			.close:hover,
+			.close:focus {
+				color: #000;
+				text-decoration: none;
+				cursor: pointer;
+			}
+
+
+			.closebtn {
+				/* The Close Button */
+					color: black;
+					float:right;
+					font-size: 35px;
+					font-weight: bold;
+					margin-left: 7px;
+					width: 14px !important;
+					cursor: pointer;
+				}
+
+				.closebtn img {
+					width: 14px !important;
+					margin-left: unset !important;
+					}
+
+				.closebtn img:hover{
+					filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+				}	
+	
+				
+				.drawbtn{
+					width: 20px;padding:7px;margin-right: 6px;
+				}
+
+				.drawbtn img{
+					width: 20px;margin-left:unset !important;cursor:pointer
+				}
+
+				.erasebtn{
+					width: 20px;padding:7px;
+				}
+
+				.erasebtn img{
+					width: 20px;margin-left:unset !important;cursor:pointer
+				}
+
+
+				.savebtn {
+					/* The Close Button */
+						color: black;
+						float:right;
+						font-size: 26px;
+						font-weight: bold;
+						margin-left: 7px;
+						width: 18px !important;
+						cursor: pointer;
+						margin-right: 10px;
+					}
+
+					
+				.savebtn img{
+						width: 18px !important;
+						margin-left: unset !important;
+					}
+
+					.savebtn img:hover{
+						filter: invert(55%) sepia(52%) saturate(2801%) hue-rotate(98deg) brightness(104%) contrast(97%)
+					}
+		
+
+			.contents{
+				display:contents;
+			}
+
+			.bodySelectedClass{
+				font-size: 15px;
+    			font-weight: 600;
+    			color: #755c98;
+    			padding: 5px;
+			}
+
+
+			.popover{
+				position: relative;
+				display: inline-block;
+				/* border-top: 1px dotted black; */
+			  }
+			  
+			  .tooltipdiv {
+				visibility: hidden;
+				width: max-content !important;
+				background-color: #00B366;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				font-size: 14px !important;
+				/* Position the tooltip */
+				position: absolute;
+				z-index: 2;
+				padding:15px;
+			    margin-left: 16px;
+			  }
+			  
+			  .popover:hover + div {
+				visibility: visible;
+				max-width: max-content !important;
+				height: auto !important;
+			  }
+
+			  .tooltipdiv::after {
+				content: " ";
+				position: absolute;
+				right: 100%;
+				border-width: 5px;
+				border-style: solid;
+				border-color: transparent #00B366  transparent  transparent;
+				
+			  }
+
+
+			.selectedAgreementClass
+			{
+				width: 25% !important;
+				background-color: #fff;
+				border: 1px solid #dddbda;
+				border-radius: .25rem;
+				transition: border .1s linear,background-color .1s linear;
+				height: 45px;
+				padding-left: 20px;
+				font-weight: bold;
+				cursor: pointer;
+				font-size: 17px;
+				color: dimgray;
+				outline: none;
+				box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);transition: all 200ms ease-out;
+			}
+
+			.selectedAgreementClass:hover
+			{
+				box-shadow: 0 0 6px rgba(35, 173, 278, 1);
+			}
+
+
+
+
+			.selectedHallClass{
+				width: 100% !important;
+				height: 51px !important;
+				border: none;
+				padding-left: 27px;
+				outline: 0;
+				font-weight: bold;
+				font-size: 17px;
+				cursor: pointer;
+				color: black;
+			}
+
+			option {
+				font-weight: bold !important;
+			}
+
+			
+			.modeButton{
+				font-size: 14px !important;
+			}
+
+			.commandButton{
+				margin-left: -29px !important;
+				font-size: 14px !important;
+				margin-top: 12px !important;
+				width: 200px !important;
+			}
+
+			.deleteimg{
+				width: 27px;height: 27px;cursor:pointer;margin-top: 10px;
+			}
+
+			.okeyimg{
+				width: 27px;height: 27px;cursor:pointer;
+			}
+
+			.notdeleteimg{
+				width: 27px;height: 27px;cursor:pointer;margin-top: 10px;margin-left: -31px;
+			}
+
+			.notokeyimg{
+				width: 27px;height: 27px;cursor:pointer;
+			}
+
+			.NotSell{
+				margin-left: -36px !important;
+			}
+
+			.logo{
+				width: 160px;padding-top: 9%;
+			}
+
+			@media only screen and (max-width:1024px){
+				.logo{
+					width: 125px !important;
+				}
+				.guides{
+					display: flex;
+				}
+				.NotSell{
+					margin-left: 0px !important;
+					font-size: 11px !important;
+				}
+
+				.deleteimg{
+					width: 20px;
+					height: 20px;
+					margin-top: -10px;
+					margin-left: 13px;
+				}
+	
+				.okeyimg{
+					width: 20px;
+					height: 20px;
+					margin-top: -10px;
+				}
+	
+				.notdeleteimg{
+					width: 20px;height: 20px;margin-top: 7px;margin-left: unset !important;
+				}
+	
+				.notokeyimg{
+					width: 20px;height: 20px;
+				}
+			}
+		
+
+			
+/* Change the link color to #111 (black) on hover */

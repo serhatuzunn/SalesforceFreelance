@@ -1,0 +1,44 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="param" type="string" default="" />
+    <c:RC_PortalHeader />
+    <div class="c-container">                        
+        <lightning:layout multipleRows="true">
+            <div class="main-container">
+                <lightning:layoutItem  size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem flexibility="auto" padding="horizontal-medium" size="10">
+                            <div class="page-section sss">
+                                <div class="s-title">{!$Label.c.RC_PortalFaq}</div>
+                                <h5>{!$Label.c.RC_PortalFaq_Q1}</h5>
+                                <p>
+                                    {!$Label.c.RC_PortalFaq_A1}
+                                </p>
+                                <h5>{!$Label.c.RC_PortalFaq_Q2}</h5>
+                                <p>
+                                    {!$Label.c.RC_PortalFaq_A2}
+                                </p>
+                                <h5>{!$Label.c.RC_PortalFaq_Q3}</h5>
+                                <p>
+                                    {!$Label.c.RC_PortalFaq_A3}
+                                </p>
+                                <h5>{!$Label.c.RC_PortalFaq_Q4}</h5>
+                                <p>
+                                    {!$Label.c.RC_PortalFaq_A4}
+                                </p>
+                                <h5>{!$Label.c.RC_PortalFaq_Q5}</h5>
+                                <p>
+                                    {!$Label.c.RC_PortalFaq_A5}
+                                </p>
+                                <h5>{!$Label.c.RC_PortalFaq_Q6}</h5>
+                                <p>
+                                    {!$Label.c.RC_PortalFaq_A6}
+                                </p>
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </div>
+        </lightning:layout>
+    </div>                       
+</aura:component>

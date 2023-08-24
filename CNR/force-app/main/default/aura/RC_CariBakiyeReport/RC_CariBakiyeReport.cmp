@@ -1,0 +1,103 @@
+<aura:component controller="RC_CariBakiyeReportController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"></aura:handler>
+    <aura:attribute name="recordId" type="String" default="{!recordId}"/>
+    <aura:attribute name="tableDatas" type="sObject" default="[]"/>
+    <aura:attribute name="cekdurumu" type="boolean" default=""/>
+    <aura:attribute name="bakiye" type="String" default=""/>
+    <aura:attribute name="isVisible" type="String" default="displaynone"/>
+    <div>
+        <div class="{!v.isVisible}" style="text-align: center;">
+            <lightning:card>
+                <aura:set attribute="title">
+                    <!--<lightning:icon iconName="utility:rows" size="small"/>-->
+                    Cari Bakiye Durumu
+                </aura:set>
+                <aura:set attribute="body">
+                    <div class="cekdurumu">
+                        <aura:if isTrue="{!not(v.cekdurumu)}">
+                            <span><lightning:icon iconName="utility:success" variant="success"/> Karşılıksız çek/senet bulunmamaktadır.</span>
+                        </aura:if>
+                        <aura:if isTrue="{!v.cekdurumu}">
+                            <span><lightning:icon iconName="utility:error" variant="error"/> Karşılıksız çek/senet bulunmaktadır.</span> 
+                        </aura:if>
+                    </div>
+                    <div class="bakiye">
+                        <lightning:badge label="{!v.bakiye}" style="font-weight: normal;background-color: lightgray;letter-spacing: 0.5px;"/>
+                    </div>
+                </aura:set>
+            </lightning:card>
+        </div>
+    </div>
+    <!--<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Cari Referans</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Cari Kod</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Cari Unvan</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Şehir</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Ödeme Planı</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Masraf Merkezi</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Proje Kodu</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Bakiye</div>
+                        </th>
+                         <th class="" scope="col">
+                            <div class="slds-truncate">Risk Limit</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Çek Durumu</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration var="data" items="{!v.tableDatas}">
+                        <tr class="slds-hint-parent">
+                            <td data-label="Cari Referans">
+                                <div class="slds-truncate" title="">{!data.cariref}</div>
+                            </td>
+                            <td data-label="Kodu">
+                                <div class="slds-truncate" title="">{!data.kodu}</div>
+                            </td>
+                            <td data-label="Unvan">
+                                <div class="slds-truncate" title="">{!data.unvani}</div>
+                            </td>
+                            <td data-label="Şehir">
+                                <div class="slds-truncate" title="">{!data.sehir}</div>
+                            </td>
+                            <td data-label="Ödeme Planı">
+                                <div class="slds-truncate" title="">{!data.odemeplani}</div>
+                            </td>
+                            <td data-label="Masraf Merkezi">
+                                <div class="slds-truncate" title="">{!data.masrafmerkezi}</div>
+                            </td>
+                            <td data-label="Proje Kodu">
+                                <div class="slds-truncate" title="">{!data.projekodu}</div>
+                            </td>
+                            <td data-label="Bakiye">
+                                <div class="slds-truncate" title="">{!data.bakiye}</div>
+                            </td>
+                            <td data-label="Risk Limit">
+                                <div class="slds-truncate" title="">{!data.risklimit}</div>
+                            </td>
+                             <td data-label="Risk Limit">
+                                <div class="slds-truncate" title="">{!data.cekdurumu}</div>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>-->
+</aura:component>

@@ -1,0 +1,127 @@
+@media screen and (max-width: 720px) {
+    .THIS .top-menu a{
+        padding: 3px !important;
+        font-size: 9px !important;
+    }
+    .THIS.c-container {
+        
+        left: 5% !important;
+        top: unset !important;
+        
+        width: unset !important;
+        
+    }
+    .THIS .divCaptionLogo{
+        position: absolute !important;
+        margin: -37% 0% 0% 15% !important;
+    }
+    .THIS .captionTitle{
+        font-size: 15px !important;
+    }
+    
+}
+
+@media screen and (max-width: 768px) and (min-width: 721px){
+    .THIS.c-container {
+        position: absolute !important;
+        top: 105% !important;
+        left: 22% !important;
+        width: 460px !important;
+    }
+    .THIS .divCaptionLogo {
+        position: absolute !important;
+        margin: -30% 0% 0% 21% !important;
+    }
+    
+}
+@media screen and (max-width: 906px) and (min-width: 769px){
+    .THIS .divCaptionLogo {
+        position: absolute !important;
+        margin: -26% 0% 0% 66% !important;
+    }
+}
+@media screen and (max-width: 1500px) and (min-width: 1120px)
+   {
+    .THIS .divCaptionLogo {
+        position: absolute !important;
+        margin: -26% 0% 0% 50% !important;
+    }
+}
+@media screen and (min-width: 1501px)  
+   {
+    .THIS .divCaptionLogo {
+        position: absolute !important;
+        margin: -26% 0% 0% 40% !important;
+    }
+}
+.THIS .backgroundImg{
+    background-image: url(!$Resource.RC_PortalResources + '/LoginBackGround/standart.png');
+}
+
+.THIS .captionTitle{
+    margin-top: 2rem;font-size: 1.7rem;color: #fff;line-height: 35px;width: 65%;
+}
+
+.THIS .loginBackgroundImg{
+    width:100% !important;
+    position:relative !important;
+    max-height:-webkit-fill-available !important;
+}
+
+.THIS .divCaptionLogo{
+    position: absolute;
+    /*margin: -26% 0% 0% 44%;*/
+    margin: -26% 0% 0% 58%;
+}
+
+.THIS.c-container {
+    position:absolute;
+    top:35%;left:10%;
+    width:460px;
+}
+.THIS .header-menu {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+}
+
+.THIS .page-section {
+    background: #fff;
+    border: solid 1px #ccc;
+    padding: 2rem;
+    border-radius: 7px;
+}
+.THIS .page-header,
+.THIS .page-footer {
+    height: 50px;
+}
+.THIS .page-main {
+    background: #f8f8f8;
+}
+
+.THIS h2{
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    line-height: 140%;
+}
+
+.THIS span{
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #aaa;
+    line-height: 180%;
+}
+
+
+.THIS .header-menu {
+    padding: 1rem;
+    height: 70px;
+    color:white;
+}
+
+.THIS .top-menu a{
+    padding:10px;
+    color:white;
+}

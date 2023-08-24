@@ -1,0 +1,33 @@
+<aura:component controller="RC_PortalController" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="fairs" type="List" default="[]" />
+    <aura:attribute name="redirectUrl" type="string" default="" />
+    <c:RC_PortalHeader />
+    <div class="c-container">                        
+        <lightning:layout multipleRows="true">
+            <aura:iteration items="{!v.fairs}" var="item">
+                <lightning:layoutItem padding="around-small" size="">
+                    <div class="page-section page-main box">
+                        <h2>{!$Label.c.RC_PortalFair_Choose}</h2>
+                        <p>{!$Label.c.RC_PortalFair_Continue}</p> <br/>
+                        <a href="{!v.redirectUrl}" onclick="{!c.selectFair}" data-record="{!item.Id}">
+                            <div class="page-section page-right sub-box">
+                                <table>
+                                    <tr>
+                                        <td class="tableCell"><img class="box-img" src="{!item.LogoSrc}" alt=""/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tableCell"><span style="">{!item.Name}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tableCell"><span>{!item.StartDate} - {!item.EndDate} </span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </a>
+                    </div>
+                </lightning:layoutItem>                      
+            </aura:iteration>
+        </lightning:layout>
+    </div>  
+</aura:component>

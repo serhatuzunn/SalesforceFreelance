@@ -1,0 +1,162 @@
+<apex:page >
+    <apex:includeLightning />
+    <style type="text/css">
+        .modaloverlay{
+        display:none;
+        position: absolute;
+        background-color: rgb(0, 0, 0, 0.5);
+        width: 100%;
+        height: 100%;
+        }
+        .modal {
+        display:none;
+        background-color: white;
+        width: 40%;
+        height: 70%;
+        margin: 5% 0 0 30%;
+        border: 1px solid white;
+        }
+        .inner{
+        margin: 2%;
+        }
+        .close{
+        font-size: 25px;
+        color: #555;
+        margin: 1%;
+        cursor:pointer;
+        }
+        .ligth-content .tbl{
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 1%;
+        }
+        .tbl td{
+        font-family: 'Salesforce Sans',Arial,sans-serif;
+        }
+    </style>
+    <div id="context" />
+    <div id="modaloverlay" class="modaloverlay" onclick="closeModal();">
+    <div id="modal" class="modal">
+        <span onclick="closeModal();" class="close">&times;</span>
+        <div id="inner" class="inner">
+            <div class="ligth-content">
+                <table class="tbl">
+                    <tbody>
+                        <tr>
+                            <td style="background: #555; height: 30px;padding: 0;width: 100%;"></td>
+                        </tr>
+                        <tr>
+                            <td style="height: 5px; padding: 0;"></td>
+                        </tr>
+                        <tr>
+                            <td style="background: #555; height: 5px; padding: 0;"></td>
+                        </tr>
+                        <tr>
+                            <td id="accountName" style="font-size: 16px; font-weight: bold;">5 şubat yayınları</td>
+                            <td style="text-align: right;"> <img style="max-width: 250px;" src="" alt="" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="tbl">
+                    <tbody>
+                        <tr>
+                            <td class="nowrap" style="font-weight: bold;"> Şirket Yetkilisi </td>
+                            <td id="contactName"></td>
+                        </tr>
+                        <tr>
+                            <td class="nowrap" style="font-weight: bold;"> Şirket Profili</td>
+                            <td id="Type"></td>
+                        </tr>
+                        <tr>
+                            <td class="nowrap" style="font-weight: bold;"> Adres</td>
+                            <td id="Address"></td>
+                        </tr>
+                        <tr>
+                            <td class="nowrap" style="font-weight: bold;"> E-Posta </td>
+                            <td id="Email"></td>
+                        </tr>
+                        <tr>
+                            <td class="nowrap" style="font-weight: bold;"> Telefon </td>
+                            <td id="Phone"></td>
+                        </tr>
+                        <tr>
+                            <td class="nowrap" style="font-weight: bold;"> Fax</td>
+                            <td id="Fax"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="tbl">
+                    <tbody>
+                        <tr>
+                            <td colspan="2">
+                                <div style="margin-bottom: 20px; margin-top: 14px; font-weight: bold;">Şirket Tanıtımı</div>
+                                <p id="FirmInfoTR"></p>
+                                <br/>
+                                <div style="margin-bottom: 20px; margin-top: 14px; font-weight: bold;">Company Information</div>
+                                <p id="FirmInfoEN"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+    $Lightning.use("c:RC_PortalApp", function() {
+        debugger;
+        $Lightning.createComponent(
+            "c:RC_Portal_Catalogue",
+            {VfPageMethod:getMessageFromComp},
+            "context",
+            function(cmp) {
+                console.log(cmp);
+            });
+    });
+    
+    function getMessageFromComp(accountName,contactName,Type,Address,Email,Phone,Fax,FirmInfoTR,FirmInfoEN)
+    {
+        debugger;
+        openModel();
+        var accountNameElement = document.getElementById('accountName');
+        accountNameElement.innerText=accountName;
+        
+        var contactNameElement = document.getElementById('contactName');
+        contactNameElement.innerText=" : " + contactName;
+        
+        var TypeElement = document.getElementById('Type');
+        TypeElement.innerText=" : " + Type;
+        
+        var AddressElement = document.getElementById('Address');
+        AddressElement.innerText=" : " + Address;
+        
+        var EmailElement = document.getElementById('Email');
+        EmailElement.innerText=" : " + Email;
+        
+        var PhoneElement = document.getElementById('Phone');
+        PhoneElement.innerText=" : " + Phone;
+        
+        var FaxElement = document.getElementById('Fax');
+        FaxElement.innerText=" : " + Fax;
+        
+        var FirmInfoTRElement = document.getElementById('FirmInfoTR');
+        FirmInfoTRElement.innerText=" : " + FirmInfoTR;
+        
+        var FirmInfoENElement = document.getElementById('FirmInfoEN');
+        FirmInfoENElement.innerText=" : " + FirmInfoEN;
+    }
+    function openModel()
+    {
+        var modal = document.getElementById('modal');
+        var modaloverlay = document.getElementById('modaloverlay');
+        modal.style.display='block';
+        modaloverlay.style.display='block';
+    }
+    function closeModal()
+    {
+        var modal = document.getElementById('modal');
+        var modaloverlay = document.getElementById('modaloverlay');
+        modal.style.display='none';
+        modaloverlay.style.display='none';
+    }
+    </script>
+</apex:page>

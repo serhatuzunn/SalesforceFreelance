@@ -1,0 +1,28 @@
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global"> 
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="redirectUrl" type="String" default="" />
+    <aura:attribute name="redirectFairUrl" type="String" default="" />
+    <aura:attribute name="redirectLogoutUrl" type="String" default="" />
+    
+    <lightning:layoutItem size="12">
+        <div class="page-header" >
+            <div class="top-menu">
+                <a href="?language=tr">{!$Label.c.RC_Portal_TrLang}
+                </a> |
+                <a href="?language=en_US">{!$Label.c.RC_Portal_EnLang}
+                </a>
+                <!--<a href="#">{!$Label.c.RC_Portal_Help}</a>-->
+                <a href="{!v.redirectFairUrl}">{!$Label.c.RC_Portal_RedirectFair}
+                </a>
+                <a href="{!v.redirectUrl}">{!$Label.c.RC_Portal_FAQ}
+                </a>
+                <a href="{!v.redirectLogoutUrl}">{!$Label.c.RC_PortalLogout}
+                </a>
+                <!--<a href="#">{!$Label.c.RC_Portal_News}
+                </a>-->
+                <div class="contact-number">{!$Label.c.RC_Portal_Contact}
+                </div>
+            </div>
+        </div>
+    </lightning:layoutItem>
+</aura:component>

@@ -1,0 +1,19 @@
+<apex:page lightningStylesheets="true">
+    <apex:includeLightning />
+    <div id="context" />
+    <script>
+    $Lightning.use("c:RC_PortalApp", function() {
+        $Lightning.createComponent(
+            "c:RC_Portal_StandInfo",
+            {},
+            "context",
+            function(cmp) {
+            console.log(cmp);
+        });
+    });
+    </script>
+    
+    
+    
+   
+</apex:page>

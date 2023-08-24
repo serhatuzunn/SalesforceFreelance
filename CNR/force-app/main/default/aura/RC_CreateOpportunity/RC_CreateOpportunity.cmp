@@ -1,0 +1,407 @@
+<aura:component controller="RC_CreateOpportunityController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <ltng:require styles="{!$Resource.customCss}" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"></aura:handler>
+    <!-- Properties -->
+    <aura:attribute name="initWrapper" 				 		type="sObject" 	default="[]"/>
+    <aura:attribute name="tableDatas" 				 		type="sObject" 	default="[]"/>
+    <aura:attribute name="tableDupliceDatas" 				type="sObject" 	default="[]"/>
+    <aura:attribute name="pills" 				 			type="sObject" 	default="[]"/>
+    <aura:attribute name="selectedPills" 					type="List" 	default="[]"/>
+    <aura:attribute name="recordId" 				 		type="String"/> 
+    <aura:attribute name="selectedTab" 				 		type="String"   default="1"/>
+    <aura:attribute name="loading" 					 		type="boolean"  default="false" />
+    <aura:attribute name="isVisibleTable" 			   	 	type="boolean"  default="false"/>
+    <aura:attribute name="isVisibleExcelTab" 			   	type="boolean"  default="false"/>
+    <aura:attribute name="isVisibleLinkTextTrue" 			type="boolean"  default="false"/>
+    <aura:attribute name="isVisibleLinkTextFailed" 			type="boolean"  default="false"/>
+    <aura:attribute name="isVisibleLinkTextSuccess" 	    type="boolean"  default="false"/>
+    <aura:attribute name="isVisibleDupliceTable" 			type="boolean"  default="false"/>
+    <aura:attribute name="isModalOpen" 			   	 		type="boolean"  default="false"/>
+    <aura:attribute name="isDisabledSubFairPicklist" 		type="boolean"  default="true"/>
+    <aura:attribute name="isDisabledSubSectorPicklist" 		type="boolean"  default="true"/>
+    <aura:attribute name="isDisabledProductGroupPicklist"   type="boolean"  default="true"/> 
+    <aura:attribute name="isDisabledTypeTab2Picklist"  		type="boolean"  default="true"/> 
+    <aura:attribute name="isDisabledTypeTab3Picklist"  		type="boolean"  default="true"/> 
+    <aura:attribute name="isDisabledTab2ListButton"   		type="boolean"  default="true"/>
+    
+    <aura:attribute name="isCheckedDesktop"   				type="boolean"  default="false"/>
+    <aura:attribute name="isCheckedMobile"   				type="boolean"  default="false"/>
+    
+    <aura:attribute name="selectedPopupDataType"			type="string"   default=""/>
+    <aura:attribute name="selectedPopupFair"				type="string"   default=""/>
+    <aura:attribute name="selectedFair"        	 			type="string"   default=""/>
+    <aura:attribute name="selectedMainFair"        	 		type="string"   default=""/>
+    <aura:attribute name="selectedSubFair"         	 		type="string"   default=""/>
+    <aura:attribute name="selectedMainSector"         	 	type="string"   default=""/>
+    <aura:attribute name="selectedSubSector"         	 	type="string"   default=""/>
+    <aura:attribute name="selectedProductGroup"         	type="string"   default=""/>
+    <aura:attribute name="PopupTag"         				type="string"   default=""/>
+    <aura:attribute name="selectedTypeTab2"         		type="string"   default=""/>
+    <aura:attribute name="selectedTypeTab3"         		type="string"   default=""/>
+    <aura:attribute name="selectedExcelRowCount"     	    type="integer"/>
+    <!-- Paging -->
+    <aura:attribute name="currentPage"     	       			type="integer"/>
+    <aura:attribute name="totalPage" 	 	       			type="integer"/>
+    <aura:attribute name="pageNumber" 		       			type="integer"/>  		
+    <aura:attribute name="pageSize" 	           			type="integer"/>
+    <aura:attribute name="recCount"                			type="integer"/>	
+    
+    <!-- Excel Properties -->
+    <aura:Attribute name="acceptList"    type="List"       default="['.xls','.xlsx']" />
+    <aura:Attribute name="excelModel"    type="List"       default="[]"/>
+    <aura:Attribute name="fileName"      type="string"     default=""/>
+    <aura:Attribute name="isUploaded"    type="boolean"    default="false"/>
+    <aura:Attribute name="isExistFile"   type="boolean"    default="false"/>
+    <aura:attribute name="newAttachment" type="List"       default="[]" />
+    <aura:attribute name="attachments"   type="List"       default="[]" />
+    <aura:attribute name="excel"         type="RC_CreateOpportunityController.ResultWrapper"/>
+    
+    
+    
+    <aura:if isTrue="{!v.loading}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    
+    <div class="c-container" style="background: white;position: relative;">
+        <lightning:layout multipleRows="true" class="slds-size_12-of-12">
+            <lightning:layoutItem padding="around-small" size="12">
+                <div class="slds-box res-back">
+                    <lightning:tabset selectedTabId="{!v.selectedTab}" onselect="{!c.tabSelected}">
+                        
+                        <lightning:tab label="Fuar Katılımına Göre" id="1">
+                            <div class="slds-box">
+                                <lightning:select  value="{!v.selectedMainFair}" name="anaFuar" label="Ana Fuar Seçiniz" required="false" class="slds-col slds-size_1-of-4  respSelect50" onchange="{!c.mainFairOnChange}">
+                                    <aura:iteration var="option" items="{!v.initWrapper.Fair.mainFairList}">
+                                        <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                                <lightning:select value="{!v.selectedSubFair}" name="altFuar" label="Alt Fuar Seçiniz" required="false" class="slds-col slds-size_1-of-4 respSelect50" disabled="{!v.isDisabledSubFairPicklist}">
+                                    <aura:iteration var="option" items="{!v.initWrapper.Fair.subFairList}">
+                                        <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                                <br/>
+                                <lightning:button variant="brand" label="Listele" title="Listele" onclick="{!c.listByTab1}"/>
+                            </div>
+                        </lightning:tab> 
+                        
+                        <lightning:tab label="Sektör Kırılımına Göre" id="2">
+                            <div class="slds-box res-back">
+                                <lightning:layout multipleRows="true" class="slds-size_12-of-12" >
+                                    <lightning:layoutItem padding="around-small" size="4" class="borderRgt" >
+                                        <lightning:select value="{!v.selectedMainSector}" name="Sektör" label="Sektör" required="false" class="slds-col slds-size_2-of-3 respSelect100" onchange="{!c.mainSectorOnChange}">
+                                            <aura:iteration var="option" items="{!v.initWrapper.Sector.sectorList}">
+                                                <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                        <lightning:select value="{!v.selectedSubSector}" name="Alt Sektör" label="Alt Sektör" required="false" class="slds-col slds-size_2-of-3 respSelect100" onchange="{!c.subSectorOnChange}" disabled="{!v.isDisabledSubSectorPicklist}">
+                                            <aura:iteration var="option" items="{!v.initWrapper.Sector.subSectorList}">
+                                                <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                        <lightning:select value="{!v.selectedProductGroup}" name="Ürün Grubu" label="Ürün Grubu" required="false" class="slds-col slds-size_2-of-3 respSelect100"  disabled="{!v.isDisabledProductGroupPicklist}">
+                                            <aura:iteration var="option" items="{!v.initWrapper.ProductGroupList}">
+                                                <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                        <lightning:select value="{!v.selectedTypeTab2}" name="Tip" label="Tip" required="true" class="slds-col slds-size_2-of-3 respSelect100"  disabled="{!empty(v.pills)}">
+                                            <aura:iteration var="option" items="{!v.initWrapper.TypeList}">
+                                                <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                        <br/>
+                                        <lightning:button variant="brand" label="Ekle" title="Ekle" onclick="{!c.AddPill}" />
+                                        <lightning:button variant="brand" label="Listele" title="Listele" onclick="{!c.listByTab2}" disabled="{!empty(v.pills)}"/>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem padding="around-small" size="8">
+                                        <label style="font-weight: 700;">Filtreler</label>
+                                        <lightning:pillContainer label="Filtreler" title="Filtreler" items="{!v.pills}" onitemremove="{!c.pillRemove}"/>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </div>
+                        </lightning:tab> 
+                        
+                        <lightning:tab label="İlgili Fuarlara Göre" id="3">
+                            <div class="slds-box res-back">
+                                <lightning:select value="{!v.selectedFair}" name="Fuar" label="Fuar Seçiniz" required="false" class="slds-col slds-size_1-of-4 respSelect100 " >
+                                    <aura:iteration var="option" items="{!v.initWrapper.Fair.allFairList}">
+                                        <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                                <lightning:select value="{!v.selectedTypeTab3}" name="Tip" label="Tip" required="true" class="slds-col slds-size_1-of-4 respSelect100 "  disabled="{!empty(v.selectedFair)}">
+                                    <aura:iteration var="option" items="{!v.initWrapper.TypeList}">
+                                        <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                                <br/>
+                                <lightning:button variant="brand" label="Listele" title="Listele" onclick="{!c.listByTab3}" />
+                            </div>
+                        </lightning:tab>
+                        
+                        <aura:if isTrue="{!v.isVisibleExcelTab}">
+                            <lightning:tab label="Excel Aktarım" id="4">
+                                <div class="slds-box">
+                                    <article class="slds-card" data-aura-rendered-by="908:0">
+                                        
+                                        <div class="slds-grid slds-gutters">
+                                            <div class="slds-col" style="text-align:center;">
+                                                <aura:if isTrue="{!v.isUploaded}">
+                                                    <div class="slds-box">
+                                                        <span style="font-weight:bold;text-align:center;">{!v.fileName}</span>
+                                                    </div>
+                                                </aura:if>
+                                                <lightning:input type="file" name="file" aura:id="excelUploadButton" label="Excel Yükle"
+                                                                 multiple="false" accept="{!v.acceptList}" required="true"
+                                                                 onchange="{!c.excelImport}"  />
+                                                
+                                                <aura:if isTrue="{!v.isExistFile}">
+                                                    <lightning:button label="Sil" iconName="utility:cancel_file_request" onclick="{!c.removeFiles}" iconPosition="left"  />
+                                                    <lightning:button variant="brand" label="Listele" title="Excel Listele" onclick="{! c.SaveExcel }" />
+                                                </aura:if>
+                                                
+                                            </div>
+                                            <div class="slds-col" style="text-align:center;">
+                                                <span></span>
+                                            </div>
+                                            <div class="slds-col" style="text-align:center;">
+                                                <ul style="">
+                                                    <li style="font-weight:bold;text-align:left;">Dosyanızı Yüklemeden Önce!</li>
+                                                    <li style="text-align:left;">1- Firma verilerini, size iletilen formatta, excel dosyası olarak yüklemeniz gerekmektedir.</li>
+                                                    <li style="text-align:left;">2- Örnek şablon indirmek için <a style="font-weight:bold;" href="{!$Resource.OrnekSablon}" target="_blank">buraya</a> tıklayın.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        
+                                    </article>
+                                    <!-- <lightning:button variant="brand" label="Listele" title="Listele" onclick="{!c.listByTab4}" /> -->
+                                </div>
+                            </lightning:tab>
+                        </aura:if>
+                        
+                        
+                    </lightning:tabset>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="12">
+                <aura:if isTrue="{!v.isVisibleTable}">
+                    <div class="slds-box">
+                        <div class="slds-scrollable">
+                            <div class="head-all">
+                                <lightning:input aura:id="cbxAllMobile" type="checkbox" class="res-All"  name="input4" onchange="{!c.checkAllCheckboxesMobile}" />
+                                <span class="res-all">Tümünü Seç</span>
+                            </div>
+                            <aura:if isTrue="{!v.isCheckedDesktop}">
+                                <span>Toplam Seçilen Firma : {!v.selectedExcelRowCount}</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isCheckedMobile}">
+                                <span>Toplam Seçilen Firma : {!v.selectedExcelRowCount}</span>
+                            </aura:if>
+                            
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col" width="1%">
+                                            <lightning:input aura:id="cbxAll" type="checkbox" name="input1"  onchange="{!c.checkAllCheckboxesDesktop}" />
+                                        </th>
+                                        <th class="" scope="col" width="15%">
+                                            <div class="slds-truncate">Firma Adı</div>
+                                        </th>
+                                        <th class="" scope="col" width="10%">
+                                            <div class="slds-truncate">Firma Tel</div>
+                                        </th>
+                                        <th class="" scope="col" width="10%">
+                                            <div class="slds-truncate">Firma Mail</div>
+                                        </th>
+                                        <th class="" scope="col" width="5%">
+                                            <div class="slds-truncate">Firma Para Birimi</div>
+                                        </th>
+                                        <th class="" scope="col" width="5%">
+                                            <div class="slds-truncate">Firma VKN No</div>
+                                        </th>
+                                        <th class="" scope="col" width="10%">
+                                            <div class="slds-truncate">Kişi Ad-Soyad</div>
+                                        </th>
+                                        <th class="" scope="col" width="10%">
+                                            <div class="slds-truncate">Kişi Telefon</div>
+                                        </th>
+                                        <th class="" scope="col" width="10%">
+                                            <div class="slds-truncate">Kişi Mail</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration var="data" items="{!v.tableDatas}">
+                                        <tr class="slds-hint-parent">
+                                            <td >
+                                                <div class="slds-truncate respCbxTD" title="cbxLine">
+                                                    <lightning:input aura:id="Cbx" type="checkbox" name="input1" value="{!data}"/>
+                                                </div>
+                                            </td>
+                                            <td data-label="Firma Adı">
+                                                <div class="slds-truncate" title="">{!data.accountName}</div>
+                                            </td>
+                                            <td data-label="Firma Tel">
+                                                <div class="slds-truncate" title="">{!data.accountPhone}</div>
+                                            </td>
+                                            <td data-label="Firma Mail">
+                                                <div class="slds-truncate" title="">{!data.accountMail}</div>
+                                            </td>
+                                            <td data-label="Firma Para Birimi">
+                                                <div class="slds-truncate" title="">{!data.accountCurrency}</div>
+                                            </td>
+                                            <td data-label="Firma VKN No">
+                                                <div class="slds-truncate" title="">{!data.accountVKN}</div>
+                                            </td>
+                                            <td data-label="Kişi Ad-Soyad">
+                                                <div class="slds-truncate" title="">{!data.contactName}</div>
+                                            </td>
+                                            <td data-label="Kişi Telefon">
+                                                <div class="slds-truncate" title="">{!data.contactPhone}</div>
+                                            </td>
+                                            <td data-label="Kişi Mail">
+                                                <div class="slds-truncate" title="">{!data.contactMail}</div>
+                                            </td>
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <br/><br/>
+                        <lightning:button variant="brand" label="Aktar" title="Aktar" onclick="{! c.openModel }" />
+                        <aura:if isTrue="{!not(v.selectedTab=='4')}">
+                            <div class="slds-align_absolute-center">
+                                <lightning:buttonGroup >
+                                    <lightning:button label="First" onclick="{!c.first}"/>&nbsp;
+                                    <lightning:button label="Prev"  onclick="{!c.prev}"/>&nbsp;
+                                    <lightning:button label="Next"  onclick="{!c.next}"/>&nbsp;
+                                    <lightning:button label="Last"  onclick="{!c.last}"/>
+                                </lightning:buttonGroup>
+                            </div>
+                            <div class="slds-align_absolute-center">
+                                <span><b>{!v.pageNumber} / {!v.totalPage}</b></span>  
+                            </div> 
+                        </aura:if>
+                        <br/>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.isVisibleDupliceTable}">
+                    <div class="slds-box">
+                        <div class="slds-scrollable">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col" >
+                                            <div class="slds-truncate">Firma Adı</div>
+                                        </th>
+                                        <th class="" scope="col" >
+                                            <div class="slds-truncate">Firma Telefon</div>
+                                        </th>
+                                        <th class="" scope="col" >
+                                            <div class="slds-truncate">Firma Vergi Kimlik No</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration var="data1" items="{!v.tableDupliceDatas}">
+                                        <tr class="slds-hint-parent">
+                                            <td data-label="Firma Adı">
+                                                <div class="slds-truncate" title="">{!data1.firmaadi}</div>
+                                            </td>
+                                            <td data-label="Firma Tel No">
+                                                <div class="slds-truncate" title="">{!data1.firmatelefon}</div>
+                                            </td>
+                                            <td data-label="Firma VKN No">
+                                                <div class="slds-truncate" title="">{!data1.firmavergikimliknumarasi}</div>
+                                            </td>
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.isVisibleLinkTextTrue}">
+                    <div class="slds-box">
+                        Satış süreci aktarımınız kuyruğa alınmıştır paket aktarımı tamamlandığında satış süreçleri sekmesinde görüntüleyebilirsiniz . Paket aktarım durumunu görüntülemek için <a href="/lightning/setup/AsyncApexJobs/home" target="blank">Tıklayınız.</a>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.isVisibleLinkTextFailed}">
+                    <div class="slds-box">
+                        Hata kayıtlarını görüntülemek için <a href="/lightning/o/RC_Logger__c/list?filterName=OCL" target="blank">Tıklayınız.</a>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.isVisibleLinkTextSuccess}">
+                    <div class="slds-box">
+                        Oluşturulan fırsatlar mevcut. İncelemek için <a href="/lightning/o/Opportunity/list?filterName=EIOSS" target="blank">Tıklayınız.</a>
+                    </div>
+                </aura:if>
+                
+            </lightning:layoutItem>
+        </lightning:layout> 
+    </div>
+    <aura:if isTrue="{!v.isModalOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        <div  class="slds-page-header">
+                            <div  class="slds-grid">
+                                <div  class="slds-col slds-has-flexi-truncate">
+                                    <header  class="slds-media slds-wrap slds-media_center slds-has-flexi-truncate bundle-heading">
+                                        <div  class="slds-col  slds-col_bump-right slds-media__body">
+                                            <h2 title="card" class="slds-card__header-title">
+                                                <span  class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate">
+                                                    Hangi fuar için işlem yapmak istiyorsunuz ?
+                                                </span>
+                                            </h2>
+                                        </div>
+                                    </header>
+                                </div>
+                            </div>
+                        </div> 
+                    </h2> 
+                </header> 
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="slds-box">
+                        <lightning:select aura:id="PopupSelect" value="{!v.selectedPopupFair}" name="altFuarPop" label="Fuar Seçiniz" required="true" class="slds-col slds-size_4-of-4 respSelect">
+                            <aura:iteration var="option" items="{!v.initWrapper.Fair.childFairList}">
+                                <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                        <br/>
+                        <lightning:select aura:id="PopupSelectType" value="{!v.selectedPopupDataType}" name="DataTypePop" label="Data Tipi Seçiniz" required="true" class="slds-col slds-size_4-of-4 respSelect">
+                            <aura:iteration var="option" items="{!v.initWrapper.DataTypeList}">
+                                <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                        <br/>
+                        <lightning:input aura:id="popUpText" required="true" label="Tag" type="text" value="{!v.PopupTag}"></lightning:input><br/>
+                        <lightning:button variant="brand" label="Aktar" title="Aktar" onclick="{!c.addSelectedItems}" class="horizontalCenter"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    
+    
+    
+    
+    
+    
+    
+</aura:component>

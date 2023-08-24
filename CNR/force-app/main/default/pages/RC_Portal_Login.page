@@ -1,0 +1,25 @@
+<apex:page >
+    <apex:includeLightning />
+    <img src="{!URLFOR($Resource.RC_PortalResources, '/LoginBackGround/standart.png')}" alt="" style="width:100%;position:relative;max-height:-webkit-fill-available;"/>
+    <div id="context" />
+    <div style="position: absolute;margin: -26% 0% 0% 36%;">
+        <div class="caption-logo">
+            <figure>
+                <img src="{!URLFOR($Resource.RC_PortalResources, '/LoginLogo/standart.png')}" alt="" draggable="false"/>
+            </figure>
+        </div>
+        <div style="margin-top: 2rem;font-size: 1.7rem;color: #fff;line-height: 35px;width: 65%;" class="caption-title">Özelleştirilmiş standlar tasarlıyoruz.</div>
+    </div>
+    <script>
+    $Lightning.use("c:RC_PortalApp", function() {
+        debugger;
+        $Lightning.createComponent(
+            "c:RC_Portal_Login",
+            {},
+            "context",
+            function(cmp) {
+                console.log(cmp);
+            });
+    });
+    </script>
+</apex:page>

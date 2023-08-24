@@ -1,0 +1,17 @@
+<apex:page >
+    <apex:includeLightning />
+    <div id="context" />
+    <script>
+    var page = "{!$CurrentPage.parameters.page}";
+    debugger;
+    $Lightning.use("c:RC_PortalApp", function() {
+        $Lightning.createComponent(
+            "c:RC_PortalHeaderPages",
+            {param:page},
+            "context",
+            function(cmp) {
+                console.log(cmp);
+            });
+    });
+    </script>
+</apex:page>

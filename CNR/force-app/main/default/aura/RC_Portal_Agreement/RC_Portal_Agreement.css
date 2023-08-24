@@ -1,0 +1,67 @@
+.THIS.c-container {
+    background: #bacbe4;
+    position: fixed;
+    height: 100%;
+}
+.THIS .main-container{
+    
+    width: 100%;
+}
+.THIS .page-section {
+    padding: 1rem;
+    height: 100%;
+    padding-left: 4%;
+    padding-right: 31%;
+}
+
+.THIS .page-section h1{
+    font-size: 1.64rem;
+    line-height: 110%;
+    margin: 1.09333rem 0 0.656rem 0;
+}
+
+.THIS .page-section p{
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: normal;
+    text-indent: 10px;
+}
+
+.THIS .approved {
+    width: 80px;
+    height: 80px;
+    background: #376bcc;
+    border-radius: 3px 3px 10px 3px;
+    color: #fff;
+    font-size: 32px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 80px;
+}
+
+.THIS .approve{
+    float:right;    
+}
+
+.THIS .approveL{
+    float:left;
+    padding: 15px;
+}
+
+.THIS .approveL p{
+    font-weight: 600;
+    color: #376bcc;
+}
+
+.THIS .approveL span{
+    float: right;
+    color:#888;
+}
+
+.THIS .page-footer{
+    bottom: 0;
+    border-top: 1px solid #fff;
+    right: 0;
+    width: 100%;
+    position: fixed;
+}

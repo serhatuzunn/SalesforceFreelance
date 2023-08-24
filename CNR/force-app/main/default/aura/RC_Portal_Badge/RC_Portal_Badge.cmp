@@ -1,0 +1,87 @@
+<aura:component controller="RC_PortalController" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="data" type="List" default="[]"/>
+    <aura:attribute name="columns" type="List" default="[]" />
+    <aura:attribute name="badge" type="sObject" default="{}" />
+    <aura:attribute name="selectedRowsList" type="List" default="[]"/>
+    <aura:attribute name="selectedRowsListTemp" type="List" default="[]"/>
+    <aura:attribute name="spinner" type="Boolean" default="false"/>
+    
+    <c:RC_PortalHeader />
+    
+    <div class="c-container">    
+        <aura:if isTrue="{!v.spinner}">
+            <div aura:id="spinnerId" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                    <span class="slds-assistive-text">Loading...</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        
+        <lightning:layout multipleRows="true">
+            <div class="main-container">
+                <lightning:layoutItem  size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem padding="" size="2">
+                            <c:RC_PortalLeftMenu />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="horizontal-medium" size="10">
+                            <div class="page-section">
+                                <ul class="slds-list_horizontal slds-has-inline-block-links_space" style = "border-bottom: 1px solid #eee; padding: 20px 0;">
+                                    <li> <a href="../s/firminfo" class="navigationlink">{!$Label.c.RC_PortalFirm_Title}</a></li> 
+                                    <li> <a href="../s/companyemployee" class="navigationlink">{!$Label.c.RC_PortalComponyEmployee_Title}</a></li> 
+                                    <li> <a href="../s/catalogue" class="navigationlink">{!$Label.c.RC_Portal_Catalogue}</a></li> 
+                                    <li> <a href="../s/standinfo" class="navigationlink">{!$Label.c.RC_PortalBoothInfo}</a></li> 
+                                    <li> <a href="#" class="navigationlink active">{!$Label.c.RC_PortalBadge}</a></li> 
+                                    <li> <a href="../s/invitation" class="navigationlink">{!$Label.c.RC_PortalInvitation}</a></li> 
+                                </ul>
+                            </div>
+                            <div class="page-section">
+                                <h2>{!$Label.c.RC_PortalBadge}</h2>
+                                <p>{!$Label.c.RC_PortalBadge_Info}</p>
+                            </div>
+                            <div class="page-section">
+                                <div class="divDisp">
+                                    <div  class="divDisp">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalComponyEmployee_Name +' '+ $Label.c.RC_PortalComponyEmployee_Surname}" value="{!v.badge.RC_FullName__c}" name="firstname" class="form-control inputBorderBottom" required="true" />
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalComponyEmployee_TitleF}" value="{!v.badge.RC_Title__c}" name="title" class="form-control inputBorderBottom" required="true" />
+                                        <lightning:button variant="brand" class='button' label="{!$Label.c.RC_Portal_Add}" onclick="{!c.insertBadgeAction}" />
+                                    </div>
+                                </div>
+                               
+                                <div style='display:flex;'>
+                                    <lightning:datatable columns="{!v.columns}"
+                                                         data="{!v.data}" 
+                                                         keyField="Id"       
+                                                         hideCheckboxColumn="true"
+                                                         onrowaction="{!c.handleRowAction}"/>
+                                    <!-- selectedRows="{! v.selectedRowsList }" onrowselection="{! c.updateSelected }"-->
+                                </div>
+                                <div style='display:flex;margin-top: -25px;'>
+                                    <lightning:button class="button" variant="brand" label="{!$Label.c.RC_PortalBadge_CreateBadge}" onclick="{!c.printBadge }" />
+                                </div>
+                            </div>
+                            <div class="page-footer">
+                                <div class='turnback'>
+                                    <lightning:button onclick="{!c.turnBack }" class="turnbackButton">
+                                        <i style="font-size: 32px;color: #888;">&lt;</i><span style="font-weight: 500;color: #888;padding: 6px 0px 0px 3px;">{!$Label.c.RC_Portal_Back}</span>
+                                    </lightning:button>
+                                </div>
+                                <div class='approve'>
+                                    <div class='approveL'>
+                                        <p>{!$Label.c.RC_Portal_SaveContinue}</p> 
+                                        <span>{!$Label.c.RC_PortalInvitation}</span>
+                                    </div>
+                                    <div class='approve'>
+                                        <lightning:button class='approved' variant="brand" label=">" onclick="{!c.approve }" /></div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem> 
+                    </lightning:layout>
+                </lightning:layoutItem>                
+            </div>
+        </lightning:layout>
+    </div>
+</aura:component>

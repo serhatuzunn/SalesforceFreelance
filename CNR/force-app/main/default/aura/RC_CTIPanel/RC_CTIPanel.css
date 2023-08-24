@@ -1,0 +1,19 @@
+.THIS .ctiButton{
+    width: -webkit-fill-available;
+}
+.THIS .refreshButton{
+    float: right;
+}
+.THIS .marginDiv{
+    margin : 10px !important;
+}
+.THIS .slds-spinner_container {  
+    z-index: 10000;
+    position: fixed;   
+}
+.THIS .slds-form-element__label{
+    margin-bottom: 10px !important;
+}
+.THIS .slds-radio{
+    margin-bottom: 5px !important;
+}

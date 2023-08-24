@@ -1,0 +1,44 @@
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="standartlogo" type="string" default="{!$Resource.RC_PortalResources + '/LoginLogo/standart-logo.png'}" />
+    <aura:attribute name="dunyagidalogo" type="string" default="{!$Resource.RC_PortalResources + '/LoginLogo/dunyagida-logo.png'}" />
+    <aura:attribute name="expotourlogo" type="string" default="{!$Resource.RC_PortalResources + '/LoginLogo/expotour-logo.png'}" />
+    <c:RC_PortalHeader />
+    <div class="c-container">                        
+        <lightning:layout multipleRows="true">
+            <div class="main-container">
+                <lightning:layoutItem  size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem flexibility="auto" padding="horizontal-medium" size="12">
+                            <div class="page-section">
+                                <div class="success-section">
+                                    <div>
+                                        <div class="row">
+                                            <div class="s-title">{!$Label.c.RC_PortalThanks}</div>
+                                            <h3>{!$Label.c.RC_PortalThanks_Successfully}</h3>
+                                            <p>{!$Label.c.RC_PortalThanks_Info}</p>
+                                            <h6 style="opacity:0.5;padding-top: 35px;">{!$Label.c.RC_PortalThanks_GroupCompanies}</h6>                    
+                                            <div>                        
+                                                <a href="http://standartcnr.com/" target="_blank">
+                                                    <img src="{!v.standartlogo}" alt="" class="cstImgResp"/>
+                                                </a>
+                                                <a href="http://cnrdunyagida.com/" target="_blank">
+                                                    <img src="{!v.dunyagidalogo}" alt=""  class="cstImgResp imgPadding"/>
+                                                </a>
+                                                <a href="http://expotour.com.tr/" target="_blank">
+                                                    <img src="{!v.expotourlogo}" alt="" class="cstImgResp"/>
+                                                </a>                                     
+                                            </div>
+                                            <div>
+                                                <lightning:button class="homeButton" variant="brand-outline" label="{!$Label.c.RC_PortalThanks_HomePage}" iconName="utility:undo" onclick="{!c.handleClick}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem> 
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </div>
+        </lightning:layout>
+    </div>
+</aura:component>

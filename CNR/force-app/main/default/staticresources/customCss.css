@@ -1,0 +1,16 @@
+/*.slds-template__container {
+    position: relative;
+    height: inherit;
+    width: 100%;
+    background: white;
+}*/
+
+@media screen and (max-width: 1024px) {
+.forceStyle.desktop .asyncCarouselIndicator, .forceStyle.desktop .forceRecordHome, .forceStyle.desktop .oneContent {
+overflow: auto !Important;
+}
+
+
+}
+
+

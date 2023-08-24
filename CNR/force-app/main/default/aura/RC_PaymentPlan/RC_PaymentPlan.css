@@ -1,0 +1,160 @@
+.THIS .customDate{
+   display: inline-table !important;
+}
+.THIS .margin-top{
+    margin-top: 4px;
+}
+.THIS .font-big{
+    font-size:15px;
+}
+.THIS .showIcon{
+    display:none;
+}
+
+.THIS .price{
+    min-width: 150px !important;
+}
+
+.THIS .payment-box
+{
+    margin-top: 1px;
+}
+.THIS .slds-datepicker{
+    font-size: var(--lwc-fontSize2,0.75rem);
+    min-width: unset;
+    max-width: unset;
+    padding: unset;
+	}
+        .THIS .label-font{
+            font-size:12px;
+        }
+@media only screen and (max-width: 1024px){
+      
+     .THIS .mobilebox{
+        padding:3px !important;
+     }      
+    .THIS .mobilemargin{
+        overflow: unset !important;
+        padding:3px !important;
+        margin:1px !important;
+    }
+    .THIS .label-font{
+       font-size:10px;
+    }      
+    .THIS .slds-form-element__label{
+        font-size : 10px !important;
+    }
+    
+     .THIS .slds-wrap{
+        flex-wrap: wrap;
+    	align-items: flex-start;
+    	width: 100%;
+    	overflow-x: scroll;
+    }
+    
+    .THIS .res-div{
+       width:100% !important;
+    }
+  
+    
+    .THIS .slds-p-around_small{
+       padding: 5px;
+       overflow: hidden;
+    }
+    
+    .THIS .slds-box{
+        padding: var(--lwc-spacingMedium,1rem);
+    	border-radius: var(--lwc-borderRadiusMedium,0.25rem);
+    	border: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));
+    	width: 100%;
+    	overflow-x: scroll;
+    }
+
+    .THIS table td input{
+        width: 120px;
+    }
+    
+    .THIS .res-calc{
+        width: max-content;
+    }
+    
+    .THIS .payment-type{
+        width:25%;
+        margin:0 auto;
+        text-align:center;
+    }
+    
+    .THIS .res-type{
+        width:117%;
+    }
+    .THIS .res-table{
+        min-height: 300px !important;
+    }
+    .THIS .res-type-btn{
+        width:100%;
+    }
+}
+
+
+@media screen and (min-width:1025px) and (max-width:1400px){
+                           
+     .THIS .mobilebox{
+        padding:3px !important;
+     }      
+    .THIS .mobilemargin{
+        overflow: unset !important;
+        padding:3px !important;
+        margin:1px !important;
+    }
+    .THIS .label-font{
+       font-size:10px;
+    }                             
+
+     .THIS .slds-wrap{
+        flex-wrap: wrap;
+    	align-items: flex-start;
+    	width: 100%;
+    	overflow-x: scroll;
+    }
+    
+    .THIS .slds-p-around_small{
+       padding: 5px;
+       overflow: hidden;
+    }
+    
+    .THIS .res-div{
+       width:100% !important;
+    }
+    
+    .THIS table td input{
+        width: 120px;
+    }
+
+    .THIS .res-calc{
+        width: max-content;
+    }
+    .THIS .res-table{
+        min-height: 300px !important;
+    }
+	.THIS .slds-box{
+        padding: var(--lwc-spacingMedium,1rem);
+    	border-radius: var(--lwc-borderRadiusMedium,0.25rem);
+    	border: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));
+    	width: 100%;
+    	overflow-x: scroll;
+    }
+    
+    .THIS .payment-type{
+        width:25%;
+        margin:0 auto;
+        text-align:center;
+    }
+    
+    .THIS .res-type{
+        width:117%;
+    }
+    
+    .THIS .res-type-btn{
+        width:100%;
+    }
+}

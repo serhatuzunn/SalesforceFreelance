@@ -1,0 +1,12 @@
+.THIS .cekdurumu{
+    margin:6px; 
+}
+
+.THIS .bakiye{
+    border-top: 1px solid lightgray;
+    padding: 8px 0px 0px 1%;
+}
+
+.THIS .displaynone{    
+    display:none;    
+}

@@ -1,0 +1,42 @@
+@media screen and (max-width: 720px) {
+    .THIS .page-header {
+        height: 100px !important;
+    }
+    .THIS .top-menu{
+        float:none !important;
+        padding-top: 8px;
+    }
+    .THIS .contact-number {
+
+        float: unset !important;
+        padding: 10px !important;
+        margin-top: 10px !important;
+    }
+}
+
+
+
+.THIS .page-header {
+    border: solid 1px #ccc;
+    padding: 1rem;
+    height: 70px;
+    background-color: #212121;
+    color:white;
+}
+
+.THIS .top-menu{
+    float:right;
+    padding-top: 8px;
+}
+
+.THIS .top-menu a{
+    padding:10px;
+    color:white;
+}
+
+.THIS .contact-number{
+    border: solid 1px white;
+    float:right;
+    padding: 10px;
+    margin-top: -10px;
+}

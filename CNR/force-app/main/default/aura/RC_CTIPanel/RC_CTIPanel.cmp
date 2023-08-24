@@ -1,0 +1,60 @@
+<aura:component controller="RC_CTIHandler" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" >
+    <aura:handler name="change" value="{!v.recordId}" action="{!c.onRecordIdChange}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="agentId" type="String" />
+    <aura:attribute name="phones" type="object"  />
+    <aura:attribute name="selectedPhoneValue" type="object"  />
+    <aura:attribute name="callDisabled" type="boolean" default="false"/>
+    <aura:attribute name="spinner" type="boolean" default="false"/>
+    
+    
+    <aura:if isTrue="{!v.spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">{!$Label.c.RC_CTI_Loading}</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <div>
+        <div class="slds-grid slds-grid_align-spread slds-grid--vertical-align-center marginDiv">
+            <div class="slds-col">            
+                <!--<p>The current recordId is {!v.recordId}.</p>-->
+                <aura:if isTrue="{!v.agentId != ''}">
+                    <p>{!$Label.c.RC_CTI_AgentId} {!' '} {!v.agentId}</p>    
+                </aura:if>
+                <aura:if isTrue="{!v.agentId == ''}">
+                    <p>{!$Label.c.RC_CTI_AgentIdMissing}</p>    
+                </aura:if>
+            </div>
+            <div class="slds-col">
+                <lightning:buttonIcon iconName="utility:refresh" variant="brand" alternativeText="Refresh" title="Refresh" onclick="{! c.refreshClick }"/>
+            </div>
+        </div>
+        <div class="slds-grid marginDiv">
+            
+        </div>
+        <div class="slds-grid marginDiv">
+            <aura:if isTrue="{!v.selectedPhoneValue != ''}">
+                
+                <lightning:radioGroup name="radioGroupRequired"
+                                      label="{!$Label.c.RC_CTI_Phones}"
+                                      options="{! v.phones }"
+                                      value="{! v.selectedPhoneValue }"
+                                      type="radio"
+                                      required="true"/>
+            </aura:if>
+            <aura:if isTrue="{!v.selectedPhoneValue == ''}">
+                <p>{!$Label.c.RC_CTI_NoPhone}</p> 
+            </aura:if>
+        </div>
+        <div class="slds-grid marginDiv">
+<lightning:button class="ctiButton"  disabled="{!v.callDisabled}" variant="success" label="{!$Label.c.RC_CTI_Call}" title="{!$Label.c.RC_CTI_Call}" onclick="{! c.handleClick }"/>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,19 @@
+<aura:component controller="RC_SozlesmeKalanReportController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"></aura:handler>
+    <aura:attribute name="recordId" type="String" default="{!recordId}"/>
+    <aura:attribute name="isVisible" type="String" default="displaynone"/>
+    <aura:attribute name="data" type="Object" default=""/>
+    <div>
+        <div class="{!v.isVisible}">
+            <lightning:card>
+                <aura:set attribute="title">
+                    <lightning:icon iconName="utility:money" size="small"/>
+                    Kalan Tutar
+                </aura:set>
+                <aura:set attribute="footer">
+                    <span style="font-weight:bold;font-size: 15px;">{!v.data.kalanTutar} TL</span>
+                </aura:set>
+            </lightning:card>
+        </div>
+    </div>
+</aura:component>

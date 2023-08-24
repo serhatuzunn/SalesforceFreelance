@@ -1,0 +1,1390 @@
+<!-- <apex:page extensions="RC_HallPlanController" standardController="Opportunity" title="Hall Plan"> -->
+<apex:page controller="RC_HallPlanController" title="Hall Plan">
+    
+
+    <!-- <script>alert('{!errorMessage}');</script> -->
+
+    <apex:includeScript value="{!URLFOR($Resource.RC_HallPlanSources, '/src/js/jquery-1.12.4.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.RC_HallPlanSources, '/src/js/jquery.event.drag-2.2.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.RC_HallPlanSources, '/src/js/jquery.event.drop-2.2.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.RC_HallPlanSources, '/src/style/style.css')}" />
+    <!-- <p>Mode : {!pageMode}</p> -->
+    <!-- <p>Mode : {!AND(AND(currentOpportunity != null, NOT(IsShowManager)), pageMode == 'SALE')}</p> -->
+    <!-- <p>Mode : {!AND(AND(currentOpportunity != null, IsShowManager), pageMode == 'SALE')}</p> -->
+    
+    <!-- <div class="selectedCountDiv">testData</div> -->
+    <div>
+        <p style="text-align: center;">
+            <!-- <b style="font-size: 27px;">{!currentOpportunity.Account.Name} <apex:outputText rendered="{!(currentOpportunity != null)}">({!opportunityTotal} m<sup>2</sup>)</apex:outputText></b> -->
+            <b style="font-size: 27px;">{!currentOpportunity.Account.RC_Brand__c}
+                <apex:outputText rendered="{!AND(AND(currentOpportunity != null, NOT(IsShowManager)), pageMode == 'SALE')}">({!opportunityTotal} m
+                    <sup>2</sup>)</apex:outputText>
+            </b>
+
+            <apex:form style="text-align: center;" rendered="{!AND(AND(currentOpportunity != null, IsShowManager), pageMode == 'SALE')}">
+                <apex:selectList id="selectedOpportunity" value="{!currentOpportunity.Id}" styleClass="selectedAgreementClass" size="1">
+                    <apex:selectOptions value="{!UnplacedAgreements}"></apex:selectOptions>
+                </apex:selectList>
+            </apex:form>
+            <!--
+                    <p>
+                         <select class ="selectedAgreementClass">
+                    <apex:repeat value="{!UnplacedAgreements}" var="string" id="theRepeat">
+                        <option value="{!string.Value}">{!string.Label}</option>
+                    </apex:repeat>
+                </select> 
+            </p>
+        -->
+        </p>
+        <p style="text-align: center;">
+            <b style="font-size: 27px;">{!currentOpportunity.RC_Fair__r.Name}</b>
+        </p>
+        <p style="text-align: center;">
+            <b style="font-size: 27px;">{!currentOpportunity.RC_Fair__r.RC_Short_Name__c} </b>
+        </p>
+        <p style="text-align: center;">
+            <b style="font-size: 27px;">{!currentFair.Name}</b>
+        </p>
+    </div>
+
+    <script type="text/javascript">
+        console.log('test');
+        //console.log("{!currentOpportunity}");
+        var currentTool = "slctd";
+        //Screen Modes
+        var MODE_Design = "Design";
+        var MODE_Save = "Save";
+        var MODE_Sale = "Sale";
+        var MODE_Approve = "Approve";
+        var TOOL_Selectable = "slctd";
+        var TOOL_Notselectable = "notselectable";
+        var TOOL_Sold = "parcelSold";
+        var currentGUID = "";
+        var currentParcelName = "";
+        var currentParcelId = "";
+        /* Design, Sale, Approve */
+        var screenMode = MODE_Design;
+        var currentSaleToolActive = true;
+
+        jQuery(function ($) {
+            if (screenMode == MODE_Design) {
+                $(document)
+
+                    .drag("start", function (ev, dd) {
+                        if (!$(this).hasClass("roomSale")) {
+                            if ((screenMode == MODE_Design && currentGUID != "")  //||
+                                //(screenMode == MODE_Sale && ev.target.classList.contains("sale"))
+                            ) {
+
+                                return $('<div class="selection" />')
+                                    .css('opacity', .45)
+                                    .css('z-index', 1)
+                                    .appendTo(document.body);
+                            }
+                        }
+                    })
+                    .drag(function (ev, dd) {
+                        if (!$(this).hasClass("roomSale")) {
+                            var selectedSize = 0;
+                            /*
+                            console.log('data : '  + JSON.stringify($('[data-parcelSfId=""]')));
+                            
+                            var selectedItem = $(".slctd");
+                            for(var i = 0; i < selectedItem.size(); i++)
+                            {
+                                //console.log($(".slctd")[i]);
+                                //console.log($(selectedItem[i]).data("parcelSfId"));
+                                if($(selectedItem[i]).data("parcelSfId") == null || $(selectedItem[i]).data("parcelSfId") == undefined )
+                                {
+                                    selectedSize++;
+                                }                            
+                            }
+                            */
+                            selectedSize = $('.slctd').filter(function () { return !$(this).data('parcelSfId'); }).length;
+                            //console.log(selectedSize);
+                            //$(".bodySelectedClass")[0].innerText = "{!$Label.RC_Hall_LastSelected} " + selectedSize;
+
+                            var selectedBodyClass = $(".bodySelectedClass");
+                            if (selectedBodyClass != null && selectedBodyClass.length > 0 && selectedBodyClass[0].innerText != undefined) {
+                                selectedBodyClass[0].innerText = "{!$Label.RC_Hall_LastSelected}" + selectedSize;
+                            }
+
+                            $(dd.proxy).css({
+                                top: Math.min(ev.pageY, dd.startY),
+                                left: Math.min(ev.pageX, dd.startX),
+                                height: Math.abs(ev.pageY - dd.startY),
+                                width: Math.abs(ev.pageX - dd.startX)
+                            });
+
+                        }
+                    })
+                    .drag("end", function (ev, dd) {
+                        if (!$(this).hasClass("roomSale")) {
+                            $(dd.proxy).remove();
+                            var selectedSize = 0;
+                            /*
+                            console.log('data : '  + JSON.stringify($('[data-parcelSfId=""]')));
+                            for(var i = 0; i < $(".slctd").size(); i++)
+                            {
+                                //console.log($(".slctd")[i]);
+                                //console.log($($(".slctd")[i]).data("parcelSfId"));
+                                if($($(".slctd")[i]).data("parcelSfId") == null || $($(".slctd")[i]).data("parcelSfId") == undefined )
+                                {
+                                    selectedSize++;
+                                }                            
+                            }
+                            */
+                            selectedSize = $('.slctd').filter(function () { return !$(this).data('parcelSfId'); }).length;
+                            var selectedBodyClass = $(".bodySelectedClass");
+                            if (selectedBodyClass != null && selectedBodyClass.length > 0 && selectedBodyClass[0].innerText != undefined) {
+                                selectedBodyClass[0].innerText = "{!$Label.RC_Hall_LastSelected}" + selectedSize;
+                            }
+
+                            //borderFunc();
+                        }
+                    });
+            }
+            //$(document)
+
+            $('.modelDivSale')
+                .drag("start", function (ev, dd) {
+
+                    return $('<div class="selection" />')
+                        .css('opacity', .45)
+                        .css('z-index', 1)
+                        .appendTo($('.modelDivSale'));
+
+                })
+                .drag(function (ev, dd) {
+
+                    var elmnt = $("#myModal");
+                    var divscrollTop = elmnt[0].scrollTop;
+                    var divscrollLeft = elmnt[0].scrollLeft;
+
+
+                    $(dd.proxy).css({
+                        top: Math.min(ev.pageY + divscrollTop - scrollY, dd.startY + divscrollTop - scrollY),
+                        //left: Math.min(ev.pageX + , dd.startX),
+                        left: Math.min(ev.pageX + divscrollLeft - scrollX, dd.startX + divscrollLeft - scrollX),
+                        height: Math.abs(ev.pageY - dd.startY),
+                        width: Math.abs(ev.pageX - dd.startX)
+                    });
+
+                    // $('.selectedCountDiv').css({
+                    //     top: Math.min(ev.pageY, dd.startY),
+                    //     left: Math.min(ev.pageX, dd.startX),
+                    //     height: Math.abs(ev.pageY - dd.startY),
+                    //     width: Math.abs(ev.pageX - dd.startX)
+                    // });
+                })
+                .drag("end", function (ev, dd) {
+                    $(dd.proxy).remove();
+                    //$('.selectedCountDiv').remove();
+                    //borderFunc();
+
+                });
+
+
+            $(document).ready(function () {
+
+
+                if ("{!pageMode}" == "DESIGN") {
+                    screenMode = MODE_Design;
+                    if($(window).width() <= 1024){
+                        if(window.innerHeight < window.innerWidth){
+                            $(".maindiv").css('margin-top', "-52%");
+                         }else{
+                            $(".maindiv").css('margin-top', "-51%");
+                         }
+                    }else{
+                        $(".maindiv").css('margin-top', "-36.88%");
+                    }
+                }
+                else if ("{!pageMode}" == "SALE") {
+                    screenMode = MODE_Sale;
+                    currentTool = TOOL_Sold;
+
+                    if($(window).width() <= 1024){
+                        if(window.innerHeight < window.innerWidth){
+                            $(".maindiv").css('margin-top', "-36%");
+                         }else{
+                            $(".maindiv").css('margin-top', "-36.5%");
+                         }
+                    }else{
+                        $(".maindiv").css('margin-top', "-29.79%");
+                    }
+                }
+                if (screenMode == MODE_Design) {
+                    $('.room')
+                        .drop("start", function () {
+                            if (screenMode != MODE_Sale && !$(this).hasClass("roomSale")) {
+
+                            
+
+                                if( (currentTool == TOOL_Notselectable && !$(this).hasClass(TOOL_Selectable)) ||
+                                (currentTool == TOOL_Selectable && !$(this).hasClass(TOOL_Notselectable) && $(this).data('parcelSfId') == null )
+                                )
+                                {
+                                        $(this).toggleClass(currentTool);
+                                }
+                            }
+                        })
+                        .drop(function (ev, dd) {
+                            if (screenMode != MODE_Sale && !$(this).hasClass("roomSale")) {
+                                
+                                if( (currentTool == TOOL_Notselectable && !$(this).hasClass(TOOL_Selectable)) ||
+                                (currentTool == TOOL_Selectable && !$(this).hasClass(TOOL_Notselectable) && $(this).data('parcelSfId') == null )
+                                )
+                                {
+                                        $(this).toggleClass(currentTool);
+                                }
+                            }
+                        })
+                        .drop("end", function () {
+                            if (screenMode != MODE_Sale && !$(this).hasClass("roomSale")) {
+                                
+                                if( (currentTool == TOOL_Notselectable && !$(this).hasClass(TOOL_Selectable)) ||
+                                (currentTool == TOOL_Selectable && !$(this).hasClass(TOOL_Notselectable) && $(this).data('parcelSfId') == null )
+                                )
+                                {
+                                        $(this).toggleClass(currentTool);
+                                }
+                                if (currentTool == TOOL_Selectable) {
+                                    $("#" + $(this)[0].id).data("parcel", currentGUID);
+                                    $("#" + $(this)[0].id).data("parcelName", currentParcelName);
+                                }
+                            } 
+                        });
+                }
+
+            });
+            $.drop({ multi: true });
+
+        });
+        var setCurrentTool = function (selectedTOOL) {
+            switch (selectedTOOL) {
+                case "Sellable": { currentTool = TOOL_Selectable; $(".currentTool").text("Current Tool : " + selectedTOOL); } break;
+                case "Not Sellable": { currentTool = TOOL_Notselectable; $(".currentTool").text("Current Tool : " + selectedTOOL); } break;
+                default: break;
+            }
+        }
+        var addParcelSaveClick = function () {
+            currentParcelName = $('.parcelInputSave').val();
+            $('#myModalParcel').hide();
+
+        }
+        var updateParcelButtonClick = function () {
+            var updatedParcelName = $('.selectedParcelName').val();
+            var removeParcelId = $('.modalSelectedParcelId').val();            
+            APEXUpdateParcel(removeParcelId, updatedParcelName);
+            operationModalHide();
+
+        }
+        var removeParcelButtonClick = function () {
+            var removeParcelId = $('.modalSelectedParcelId').val();
+            APEXRemoveParcel(removeParcelId);
+            operationModalHide();
+        }
+        var addParcelCancelClick = function () {
+            currentParcelName = "";
+            currentGUID = "";
+            location.reload();
+            //TODO AYTUG : remove sfid is null
+
+            $('#myModalParcel').hide();
+        }
+        var saveResultFunction = function(e)
+        { 
+            if(e == "{!$Label.RC_Hall_Success}")
+            {
+                location.reload();
+            }
+            else if(e == "{!$Label.RC_Hall_AlreadySold}" ||
+             e =="{!$Label.RC_Hall_UndefinedError}" || 
+             e == "{!$Label.RC_Hall_AlreadySoldAgreement}" ||
+             e == "{!$Label.RC_Hall_CanNotDelete}"  )
+            { 
+                $('#myModalMessageError').css('display', 'block');
+                $(".textParcelErrorMessageSave")[0].innerText = e;
+            }
+        }
+        var borderFunc = function () {
+            var addedList = [];
+            $('.slctd').each(function (i, div) {
+                var divId = $(this).attr('id');
+                var splitted = divId.split("-");
+                var xCoor = parseInt(splitted[0]);
+                var yCoor = parseInt(splitted[1]);
+
+                var leftDiv = (xCoor - 1) + '-' + (yCoor);
+                var rightDiv = (xCoor + 1) + '-' + (yCoor);
+                var upDiv = (xCoor) + '-' + (yCoor - 1);
+                var downDiv = (xCoor) + '-' + (yCoor + 1);
+                if (!$('#' + leftDiv).hasClass('slctd')) {
+                    $(this).addClass("borderLeft");
+                }
+                else {
+                    $(this).removeClass("borderLeft");
+                }
+                if (!$('#' + rightDiv).hasClass('slctd')) {
+                    $(this).addClass("borderRgt");
+                }
+                else {
+                    $(this).removeClass("borderRgt");
+                }
+
+                if (!$('#' + upDiv).hasClass('slctd')) {
+                    $(this).addClass("borderUp");
+                }
+                else {
+                    $(this).removeClass("borderUp");
+                }
+                if (!$('#' + downDiv).hasClass('slctd')) {
+                    $(this).addClass("borderDown");
+                }
+                else {
+                    $(this).removeClass("borderDown");
+                }
+                var currentSfId = $(this).data("parcelSfId");
+                if($('#' + downDiv).data("parcelSfId") != currentSfId && $('#' + rightDiv).data("parcelSfId") != currentSfId
+                ){
+                //if ($(this).hasClass("borderRgt") && $(this).hasClass("borderDown")) {
+                    var parcelSfId = currentSfId;
+                    var parcelName = $(this).data("parcelName");
+                    if (parcelName && !addedList.includes(parcelSfId)) {
+                        addedList.push(parcelSfId);
+                        $(this).html("<div class='rightBottomCorner'>" + parcelName + "</div>");
+                    }
+                }
+
+            });
+
+            $('.parcelSold').each(function (i, div) {
+                var divId = $(this).attr('id');
+                var splitted = divId.split("-");
+                var xCoor = parseInt(splitted[0]);
+                var yCoor = parseInt(splitted[1]);
+
+                var leftDiv = (xCoor - 1) + '-' + (yCoor);
+                var rightDiv = (xCoor + 1) + '-' + (yCoor);
+                var upDiv = (xCoor) + '-' + (yCoor - 1);
+                var downDiv = (xCoor) + '-' + (yCoor + 1);
+                var sfId = $(this).data("parcelSoldSfId");
+                //alert(sfId);
+                //alert($('#' + leftDiv).data("parcelSfId"));
+
+                if (sfId != $('#' + leftDiv).data("parcelSoldSfId")) {
+                    $(this).addClass("parcelborderLeft");
+                }
+                else {
+                    $(this).removeClass("parcelborderLeft");
+                }
+                if (sfId != $('#' + rightDiv).data("parcelSoldSfId")) {
+
+                    $(this).addClass("parcelborderRgt");
+                }
+                else {
+                    $(this).removeClass("parcelborderRgt");
+                }
+
+                if (sfId != $('#' + upDiv).data("parcelSoldSfId")) {
+                    $(this).addClass("parcelborderUp");
+                }
+                else {
+                    $(this).removeClass("parcelborderUp");
+                }
+                if (sfId != $('#' + downDiv).data("parcelSoldSfId")) {
+                    $(this).addClass("parcelborderDown");
+                }
+                else {
+                    $(this).removeClass("parcelborderDown");
+                }
+
+            });
+
+
+
+
+        };
+
+        var saveSellonClick = function () {
+
+            if ("{!currentOpportunity.StageName}" == "Agreement" || "{!currentOpportunity.StageName}" == "Advance Payment") {
+                $(".savebtn")[0].style.display = "none";
+                var revisedSells = $(".sellrevised");
+                var ParentParcelId = currentParcelId;
+                var AgreementId = "{!currentOpportunity}";
+                var roomSize = 0;
+                var parcelDesign = [];
+                var roomType = "Sold";
+                var hallId = $(".selectedHallClass")[0].value;
+
+                for (var i = 0; i < revisedSells.size(); i++) {
+                    var revisedItem = revisedSells[i];
+                    parcelDesign.push(revisedItem.id);
+                }
+                roomSize = revisedSells.size();
+                if ({!opportunityTotal
+            }  == roomSize)
+            {
+                //String data = '{"ParentParcelId" : "a058E00000AE5EhQAL","AgreementId" : "0068E00000NkMhoQAF","RoomSize" : 10,"ParcelDesign" : "[\\"7-13\\",\\"8-13\\",\\"9-13\\",\\"10-13\\"]","RoomType" : "Sold"}';
+                var uploadData = {
+                    "ParentParcelId": ParentParcelId,
+                    "AgreementId": AgreementId,
+                    "RoomSize": roomSize,
+                    "ParcelDesign": JSON.stringify(parcelDesign),
+                    "RoomType": roomType
+                };
+                APEXSaveSell(hallId, AgreementId, JSON.stringify(uploadData));
+            }
+                else
+        {
+            var modal = document.getElementById("myModalMessage");
+            modal.style.display = "block";
+            $(".textParcelMessage")[0].innerText = "{!$Label.RC_Hall_ParcelSize}";
+            $(".savebtn")[0].style.display = "";
+        }
+            }
+            else
+        {
+            //debugger;
+            var modal = document.getElementById("myModalMessage");
+            modal.style.display = "block";
+            $(".textParcelMessage")[0].innerText = "{!$Label.RC_Hall_AgreementStatus}";
+        }
+        }
+        var guidGenerator = function () {
+            var S4 = function () {
+                return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+            };
+            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+        }
+        var jsSaveLayout = function () {
+            var hallParcels = [];
+            var hallId = $(".selectedHallClass")[0].value;
+            var selected = $("." + TOOL_Selectable);
+            var selectedIdListMap = {};
+            var notselectedIdList = [];
+
+            for (var i = 0; i < selected.length; i++) {
+                var addItem = {
+                    type: TOOL_Selectable,
+                    id: selected[i].id,
+                    parcel: $("#" + selected[i].id).data("parcel"),
+                    parcelName: $("#" + selected[i].id).data("parcelName")
+                }
+                //git <-- yanlışlıkla yazılmış galiba. anlam ifade etmedi.
+                //selectedIdList.push(addItem);
+                if(addItem.parcelName != null && addItem.parcelName.length() > 0)
+                {
+                    var newArray = [];
+                    if (selectedIdListMap[addItem.parcel]) {
+                        newArray = selectedIdListMap[addItem.parcel];
+                    }
+                    newArray.push(addItem);
+                    selectedIdListMap[addItem.parcel] = newArray;
+                }
+            }
+            var arr = [];
+            for (var key in selectedIdListMap) {
+                if (selectedIdListMap.hasOwnProperty(key)) {
+                    arr.push([key, selectedIdListMap[key]]);
+                }
+            }
+            for (var i = 0; i < arr.length; i++) {
+                var parcelItem = {};
+                var mapItem = arr[i];
+                var _parcel = mapItem[0];
+                var _parcelName = "";
+                var _type = "";
+
+                var idArray = [];
+                for (var j = 0; j < mapItem[1].length; j++) {
+                    if (j == 0) {
+                        _parcelName = mapItem[1][j].parcelName;
+                        _type = mapItem[1][j].type;
+                    }
+                    idArray.push(mapItem[1][j].id);
+                }
+                if (idArray.length > 0) {
+                    parcelItem = {
+                        SfId: "",
+                        ParcelId: _parcel,
+                        ParcelName: _parcelName,
+                        ParcelDesign: JSON.stringify(idArray),
+                        RoomType: "Sellable",
+                        RoomSize: idArray.length
+                    }
+                    hallParcels.push(parcelItem);
+                }
+
+
+            }
+
+
+            var selected = $("." + TOOL_Notselectable);
+            for (var i = 0; i < selected.length; i++) {
+                notselectedIdList.push(selected[i].id);
+            }
+
+            hallParcels.push({
+                SfId: "",
+                ParcelId: hallId + "_0101",
+                ParcelName: "",
+                ParcelDesign: JSON.stringify(notselectedIdList),
+                RoomType: "Not Sellable",
+                RoomSize: 0
+            });
+            var pushValue = {
+                HallId: hallId,
+                HallParcels: hallParcels
+            };
+            APEXSaveLayout(JSON.stringify(pushValue));
+        }
+        var myModalHide = function () {
+            $('#myModal').hide();
+            try {
+                var backgroundImage = "URL('" + {!currentDesign
+            }.ImageURL + "')";
+            $(".maindiv").css('background-image', backgroundImage);
+        }
+            catch (e) {
+            console.log(JSON.stringify(e));
+        }
+        }
+        var operationModalHide = function () {
+            $('#modalParcelOperation').hide();
+        }
+        var changeToolSelection = function (drawable) {
+            currentSaleToolActive = drawable;
+            if (drawable) {
+                $($('.drawbtn')[0]).addClass('controlDrawButtonSelected');
+                $($('.erasebtn')[0]).removeClass('controlEraseButtonSelected');
+            }
+            else {
+                $($('.drawbtn')[0]).removeClass('controlDrawButtonSelected');
+                $($('.erasebtn')[0]).addClass('controlEraseButtonSelected');
+            }
+        }
+    </script>
+    <apex:outputPanel id="showMessage">
+        <!-- <apex:outputText value="{!errorMessage}"  /> -->
+        <script>saveResultFunction('{!errorMessage}');</script>
+    </apex:outputPanel> 
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content" id="parcel-content" style="min-width: 700px;min-height: 400px;border-radius: 6px;">
+            <div class="modal-title">
+
+                <div id="SelectedCount" style="margin-top: 10px;font-size: 16px;font-weight: 700;color:#8F006B;letter-spacing: 3px;float: left;">{!$Label.RC_Hall_SelectedBlock} 0</div>
+                <!-- <button class="parcelButton" onclick="saveSellonClick();" style="float:right;">Save</button> -->
+
+                <div style="display:flex;float: right;">
+                    <!-- <span class="drawbtn controlButton controlButtonSelected" onclick="changeToolSelection(true);">🖌️</span>
+                        <span class="erasebtn controlButton" onclick="changeToolSelection(false);">🗑️</span> -->
+                        <div class="drawbtn"><img src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/edit.svg')}" onclick="changeToolSelection(true);" /></div>
+                        <div class="erasebtn"><img src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/eraser.svg')}" onclick="changeToolSelection(false);" /></div>
+                        <span class="savebtn"><img src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/check.svg')}" onclick="saveSellonClick();"/></span>
+                        <span class="closebtn"><img src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/close.svg')}" onclick="myModalHide();"/></span>
+                </div>
+
+            </div>
+
+            <div class="modelDivSale" id="modelDivSale" style="margin-top:10px;"></div>
+            <!-- <div class="modal-footer">
+                    <button class="parcelButton" onclick="saveSellonClick();">Save</button>
+            </div> -->
+        </div>
+
+    </div>
+
+    <div id="modalParcelOperation" class="modal">
+        <div class="modal-content" id="parcel-content" style="min-width: 400px;min-height: 200px;border-radius: 6px;">
+            <div class="modal-title">
+                <div style="display:flex;float: right;">
+                    <span class="closebtn" onclick="operationModalHide();">&times;</span>
+                </div>
+            </div>
+            <div class="parcel-modal-content">
+                <div style="display: none;" class="modalSelectedParcelId">HiddenSfId</div>
+
+                <label class="labelParcel">{!$Label.RC_Hall_ParcelInput}</label>
+                <input class="parcelInput selectedParcelName" id="parcelNameInput" autocomplete="off"/>
+            </div>
+            <div class="modal-footer">
+                <button class="parcelButton parcelButtonRemove" onclick="removeParcelButtonClick();">{!$Label.RC_Hall_Remove}</button>
+                <button class="parcelButton parcelButtonUemove" onclick="updateParcelButtonClick();">{!$Label.RC_Hall_Update}</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModalParcel" class="modalParcel">
+
+        <!-- Modal content -->
+        <div class="modal-content-parcel">
+            <!-- TODO ZCK : hide edildiğinde guid sıfırlanmalı, burası fonksiyon üzerinden çağırılacak. -->
+            <span class="close" onclick="addParcelCancelClick();">&times;</span>
+
+            <div class="modelDiv">
+                <div class="modal-title">
+                    <img src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/parcel.PNG')}" />
+                </div>
+                <div class="parcel-modal-content">
+                    <label class="labelParcel">{!$Label.RC_Hall_ParcelInput}</label>
+                    <input class="parcelInput parcelInputSave" id="parcelNameInput" autocomplete="off"/>
+                </div>
+                <!-- TODO ZCK : parcel name alındıktan sonra çizim başlamalı. inputu alıp modal hide edilecek. -->
+                <div class="modal-footer">
+                    <button class="parcelButton" onclick="addParcelSaveClick();">{!$Label.RC_Hall_Save}</button>
+                    <button class="parcelCancelButton" onclick="addParcelCancelClick();">{!$Label.RC_Hall_Cancel}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="myModalRemove" class="modalParcel">
+
+        <!-- Modal content -->
+        <div class="modal-content-parcel" style="height:unset  !important">
+            <!-- TODO ZCK : hide edildiğinde guid sıfırlanmalı, burası fonksiyon üzerinden çağırılacak. -->
+            <span class="close" onclick="$(this).parent().parent().hide();">&times;</span>
+
+            <div class="modelDiv">
+                <div class="modal-title">
+                    <img src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/delete.png')}" />
+                </div>
+
+                <div class="parcel-modal-content">
+                    <div class="deleteContentDiv">
+                        <label class="textParcel deleteLabel">{!$Label.RC_Hall_DeleteConfirm}</label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <!-- TODO ZCK : parcel name alındıktan sonra çizim başlamalı. inputu alıp modal hide edilecek. -->
+                    <center>
+                        <button class="parcelRemoveButton parcelButton">{!$Label.RC_Hall_Yes}</button>
+                    </center>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="myModalMessageError" class="modalParcel">
+
+        <!-- Modal content -->
+        <div class="modal-content-parcel">
+            <!-- TODO ZCK : hide edildiğinde guid sıfırlanmalı, burası fonksiyon üzerinden çağırılacak. -->
+            <span class="close" onclick="location.reload();">&times;</span>
+
+            <div class="modelDiv">
+
+                <div class="modal-title">
+                    <img src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/info.png')}" />
+                </div>
+
+                <div class="parcel-modal-content">
+                    <div class="deleteContentDiv">
+                        <label class="textParcel textParcelErrorMessageSave"></label>
+                    </div>
+                </div>
+                <br/>
+            </div>
+        </div>
+
+    </div>
+    <div id="myModalMessage" class="modalParcel">
+
+        <!-- Modal content -->
+        <div class="modal-content-parcel">
+            <!-- TODO ZCK : hide edildiğinde guid sıfırlanmalı, burası fonksiyon üzerinden çağırılacak. -->
+            <span class="close" onclick="$(this).parent().parent().hide();">&times;</span>
+
+            <div class="modelDiv">
+
+                <div class="modal-title">
+                    <img src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/info.png')}" />
+                </div>
+
+                <div class="parcel-modal-content">
+                    <div class="deleteContentDiv">
+                        <label class="textParcel textParcelMessage"></label>
+                    </div>
+                </div>
+                <br/>
+            </div>
+        </div>
+
+    </div>
+    <div style="display:none;" id="myModalNodata" class="modalParcel">
+        <div class="modal-content-parcelNo nodata">
+            <span style="color:white;font-size:12px;">{!$Label.RC_Hall_NoNewData}</span>
+            <span class="closeNodata" onclick="$('#myModalNodata').hide();">&times;</span>
+        </div>
+
+    </div>
+
+
+    <div>
+
+
+        <div class="headerDiv">
+            <nav class="main-nav" id="main-nav">
+                <ul class="main-sections">
+                    <li style="border-top-left-radius: 40px;height: 71px;">
+                        <center>
+                            <img class="logo"  src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/logo.png')}" />
+                        </center>
+                    </li>
+                    <li>
+                        <apex:form >
+                            <!-- <apex:pageBlock id = 'refreshDiv'>
+                                <div>{!errorMessage}</div>
+
+                            </apex:pageBlock> -->
+                            <!-- <div style="display:none;" id="errorMessageDiv" >{!$CurrentPage.Parameters.errorMessage}</div> -->
+
+                            <apex:actionFunction name="APEXSaveLayout" action="{!saveLayout}" reRender="view" oncomplete="location.reload();">
+                                <apex:param id="anode" name="node" value="" />
+                            </apex:actionFunction>
+                            <apex:actionFunction name="APEXreloadPage" action="{!reloadPage}" reRender="view">
+                                <apex:param id="anode2" name="hallId" value="" />
+                                <apex:param id="anode3" name="recordId" value="" />
+                            </apex:actionFunction>
+                            <!-- <apex:actionFunction name="APEXSaveSell" action="{!makeSell}" reRender="none" oncomplete="saveResultFunction('{!errorMessage}');"> -->
+                            <apex:actionFunction name="APEXSaveSell" action="{!makeSell}" reRender="showMessage" >
+                                <apex:param id="anode4" name="hallId" value="" />
+                                <apex:param id="anode5" name="recordId" value="" />
+                                <apex:param id="anode6" name="designData" value="" />
+                                <!-- <apex:param id="anode13" name="errorMessageProp" value=""  assignTo="{!errorMessage}"/> -->
+                            </apex:actionFunction>
+                            <apex:actionFunction name="APEXRemoveSale" action="{!removeSale}" rerender="showMessage">
+                                <apex:param id="anode7" name="hallId" value="" />
+                                <apex:param id="anode8" name="recordId" value="" />
+                                <apex:param id="anode9" name="soldId" value="" />
+                            </apex:actionFunction>
+                            <apex:actionFunction name="APEXRemoveParcel" action="{!removeParcelDesign}" reRender="view" oncomplete="location.reload();">
+                                <apex:param id="anode10" name="ParcelId" value="" />
+                            </apex:actionFunction>
+                            <apex:actionFunction name="APEXUpdateParcel" action="{!updateParcelName}" reRender="view" oncomplete="location.reload();">
+                                <apex:param id="anode11" name="ParcelId" value="" />
+                                <apex:param id="anode12" name="newName" value="" />
+                            </apex:actionFunction>
+
+                            <apex:selectList id="selectedHall" value="{!currentHall}" styleClass="selectedHallClass" size="1">
+                                <apex:selectOptions value="{!HallList}"></apex:selectOptions>
+                            </apex:selectList>
+                        </apex:form>
+
+                    </li>
+
+                    <li class="articles">
+                        <div>
+                            <img style='width: 50px;float: left;height: 50px;margin-left: 20px;' src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/parcel.PNG')}"
+                            />
+                            <button type="button" class="btn btn-default modeButton" value="Design">{!$Label.RC_Hall_AddParcel}</button>
+                        </div>
+
+                        <div style="display:none;" class="approveAndRemove">
+                            <button onclick="addParcelCancelClick();" class="modeButton contents">
+                                <img class="deleteimg" src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/deleteicon.png')}"
+                                />
+                            </button>
+                            <button value="Save" onclick="jsSaveLayout();" class="modeButton contents">
+                                <img  class="modeButton okeyimg" src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/okeyicon.png')}"
+                                />
+                            </button>
+                        </div>
+                    </li>
+
+                    <li class="guides">
+                        <img style='width: 40px;float: left; height: 40px;margin-top: 4px;margin-left: 25px;' src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/not-available.png')}"
+                        />
+                        <button type="button" class="btn btn-default commandButton NotSell" value="Not Sellable">{!$Label.RC_Hall_NotSellableBlock}</button>
+                        <div style="display:none;" class="approveAndRemoveNotSellable">
+                            <button onclick="addParcelCancelClick();" class="modeButton contents">
+                                <img class="notdeleteimg" src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/deleteicon.png')}"
+                                />
+                            </button>
+                            <button value="Save" onclick="jsSaveLayout();" class="modeButton contents">
+                                <img class="modeButton notokeyimg" src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/okeyicon.png')}"
+                                />
+                            </button>
+                        </div>
+                    </li>
+
+                    <li style="height:100% !important;">
+                        <div>
+                            <div style="display:none;" class="currentTool">Current Tool : Sellable</div>
+                            <div style="display:none;" class="currentMode">Current Mode : Design</div>
+                            <center>
+                                <apex:outputText rendered="{!(currentOpportunity == null)}">
+                                    <div class="bodySelectedClass">{!$Label.RC_Hall_LastSelected} 0</div>
+
+                                </apex:outputText>
+                                <img src="{!URLFOR($Resource.RC_HallPlanSources, '/src/img/HALL5-info.jpg')}" style="width: 85%;" />
+                            </center>
+                        </div>
+                    </li>
+                </ul>
+
+
+            </nav>
+        </div>
+
+        <div class="divAllContent"></div>
+
+        <div>
+            <div class="maindiv">
+
+
+
+                <div class="floorplan">
+                </div>
+
+
+                <script>
+                    $(document).ready(function () {
+                        var existClass = document.getElementsByClassName('brandQuaternaryBgr');
+                        if(existClass != null && existClass.length > 0)
+                        {
+                            document.getElementsByClassName('brandQuaternaryBgr')[0].style.cssText = 'background: #fff !important;'
+                        }
+
+                    var loadDesign = {!currentDesign};
+                    var imageSRC = 'Ist-Hall8.png';
+                    var backLeft = 6;
+                    var backTop = 11;
+                    //console.log(loadDesign);
+                    if (loadDesign != null) {
+                        var hallname = loadDesign.HallName;
+                        var hallLocation = loadDesign.HallLocation;
+                        backLeft = loadDesign.HallLeft;
+                        backTop = loadDesign.HallTop;
+                        //debugger;
+
+
+
+
+
+                        if (hallname != '' && hallLocation != '') {
+                            //imageSRC = hallLocation + "-" + hallname + ".png";
+                            //imageSRC = imageSRC.replace(' ', '');
+                            imageSRC = loadDesign.ImageURL;
+                        }
+
+                        if ("{!pageMode}" == "SALE") {
+                            $(".articles").css("display", "none");
+                            $(".guides").css("display", "none");
+                            $(".maindiv").css('margin-top', "-29.9%");
+                        }
+
+                        $(".selectedHallClass")[0].value = loadDesign.HallId;
+                        var hallx = loadDesign.HallWidth;
+                        var hally = loadDesign.HallHeight;
+
+                        var len = loadDesign.HallLength;
+                        var text = "";
+                        var i;
+                        var j;
+                        for (j = 0; j < hally + 1; j++) {
+                            for (i = 0; i < hallx + 1; i++) {
+
+                                text += "<div id='";
+                                text += i + "-" + j;
+                                text += "' class='room'  style=' top: ";
+                                text += j * len  ;
+                                text += "px;	left: ";
+                                text += i * len;
+                                text += "px;'>";
+                                if (j == 0)
+                                    text += i;
+                                if (i == 0)
+                                    text += j;
+                                text += "</div>";
+                            }
+                        }
+                        $(".floorplan").html(text);
+
+                        if (loadDesign.HallParcels && loadDesign.HallParcels.length > 0) {
+                            for (var i = 0; i < loadDesign.HallParcels.length; i++) {
+                                var roomItem = loadDesign.HallParcels[i];
+                                var _type = "",
+                                    _parcel = roomItem.ParcelId,
+                                    _parcelName = roomItem.ParcelName,
+                                    _sfId = roomItem.SfId;
+
+                                if (roomItem.RoomType == "Sellable") _type = TOOL_Selectable;
+                                else if (roomItem.RoomType == "Not Sellable") _type = TOOL_Notselectable;
+                                else if (roomItem.RoomType == "Sold") _type = TOOL_Sold;
+                                if (roomItem.ParcelDesign) {
+                                    var usedList = [];
+                                    var parcelIds = JSON.parse(roomItem.ParcelDesign);
+                                    for (var j = 0; j < parcelIds.length; j++) {
+
+                                        var currentParcel = $("#" + parcelIds[j]);
+                                        currentParcel.toggleClass(_type);
+                                        if (_type != TOOL_Sold) {
+                                            currentParcel.data("parcel", _parcel);
+                                            currentParcel.data("parcelName", _parcelName);
+                                            currentParcel.data("parcelSfId", roomItem.SfId);
+                                        }
+                                        else {
+                                            currentParcel.data("parcelSoldSfId", roomItem.SfId);
+                                            currentParcel.attr("title", roomItem.AccountName + ' (' + roomItem.RoomSize + ')');
+                                            if (!usedList.includes(roomItem.SfId)) {
+                                                usedList.push(roomItem.SfId);
+                                                currentParcel[0].innerHTML = '<p class="soldAccountInfo">' + roomItem.AccountName + ' (' + roomItem.RoomSize + ')' + '</p>';
+                                            }
+                                        }
+                                        // $("#" + parcelIds[j]).toggleClass(_type);
+                                        // if (_type != TOOL_Sold) {
+                                        //     $("#" + parcelIds[j]).data("parcel", _parcel);
+                                        //     $("#" + parcelIds[j]).data("parcelName", _parcelName);
+                                        //     $("#" + parcelIds[j]).data("parcelSfId", roomItem.SfId);
+                                        // }
+                                        // else
+                                        // { 
+                                        //     $("#" + parcelIds[j]).data("parcelSoldSfId", roomItem.SfId);
+                                        //     $("#" + parcelIds[j]).attr("title", roomItem.AccountName + ' (' + roomItem.RoomSize + ')');
+                                        //     if(!usedList.includes(roomItem.SfId))
+                                        //     {
+                                        //         usedList.push(roomItem.SfId);
+                                        //         debugger;
+
+                                        //     }
+                                        // }
+
+
+                                    }
+                                }
+                            }
+
+                            borderFunc();
+                        }
+                    }
+
+                    //var backgroundImage = "URL('{!URLFOR($Resource.RC_HallLayout, '"+ imageSRC +"')}')";
+                    var backgroundImage = "URL('" + imageSRC + "')";
+
+                    $(".maindiv").css('background-image', backgroundImage);
+                    $(".maindiv").css('background-position', backLeft + 'px ' + backTop + 'px');
+                    //alert({!errorMessage});
+                    $(".selectedHallClass").change(function (e) {
+                        var hallId = $(".selectedHallClass")[0].value;
+                        var currentId = "";
+                        if ("{!pageMode}" == "DESIGN") {
+                            currentId = "{!currentFair}";
+
+                        }
+                        else if ("{!pageMode}" == "SALE") {
+                            currentId = "{!currentOpportunity}";
+                        }
+                        APEXreloadPage(hallId, currentId);
+                    });
+                    $(".selectedAgreementClass").change(function (e) {
+
+                        var oppId = $(this).val();
+                        var redirectURL = '/apex/RC_HallPlanPage?recordId=' + oppId;
+                        window.location = redirectURL;
+                    });
+
+                    $(".room").click(function (e) {
+                        if (screenMode == MODE_Design && "DESIGN" == "{!pageMode}") {
+                            if ($(this).data("parcelSfId") != undefined && $(this).data("parcelSfId").length > 0 &&
+                            $(this).hasClass(TOOL_Selectable) && currentTool == TOOL_Selectable
+                            ) {
+                                    var modal = document.getElementById("modalParcelOperation");
+                                    modal.style.display = "block";
+
+                                    $(".selectedParcelName").val($(this).data("parcelName"));
+                                    $(".modalSelectedParcelId").val($(this).data("parcelSfId"));
+                            }
+                            else {
+                                debugger;
+                                if( (currentTool == TOOL_Notselectable && !$(this).hasClass(TOOL_Selectable)) ||
+                                (currentTool == TOOL_Selectable && !$(this).hasClass(TOOL_Notselectable) )
+                                )
+                                { 
+                                    if(currentGUID != "")
+                                    {
+                                        $(this).toggleClass(currentTool);
+                                        $(this).toggleClass("backgroundwhite");
+                                        borderFunc();
+                                    }
+                                }
+                                // if(currentGUID != "" || currentTool == TOOL_Notselectable)
+                                // {
+                                //     $(this).toggleClass(currentTool);
+                                //     $(this).toggleClass("backgroundwhite");
+                                //     borderFunc();
+                                // }
+                            }
+                        }
+                        else if (/*screenMode == MODE_Sale*/"SALE" == "{!pageMode}" && $(this).attr("class").includes("slctd")) {
+                            $("#SelectedCount").html("{!$Label.RC_Hall_SelectedBlock} 0");
+                            $(".modelDivSale").html("");
+                            //console.log(new Date());
+
+                            var showtext = $(this).data("parcel") + " " + $(this).data("parcelName");
+
+                            var modal = document.getElementById("myModal");
+                            changeToolSelection(true);
+                            modal.style.display = "block";
+                            var backgroundImage = '';//"URL('"+ currentDesign.ImageURL +"')";
+                            $(".maindiv").css('background-image', backgroundImage);
+
+                            var innerHtml = "";
+                            var selectedData = $(".slctd");
+                            $dialog = $("#myModal .modal-content")
+                            //alert("Top: " + $dialog.offset().top + " Left: " + $dialog.offset().left);
+
+                            var firstLeft = 0.0;
+                            var firstTop = 0.0;
+                            var groupedParcelList = [];
+
+                            var minLeft = "0px";
+                            var maxLeft = "0px";
+
+                            var minTop = "0px";
+                            var initialized = false;
+                            // debugger;
+                            for (var i = 0; i < selectedData.length; i++) {
+                                if ($("#" + selectedData[i].id).data("parcel") == $(this).data("parcel")) {
+                                    if (!initialized) {
+                                        initialized = true;
+                                        minLeft = $(selectedData[i]).css("left").replace("px", "");
+                                        //maxLeft = $(selectedData[i]).css("left").replace("px", "");
+                                    }
+                                    // if(selectedData[i].id == "3-59")
+                                    // {
+                                    //     debugger;
+                                    // }
+                                    var minLeftInt = minLeft.replace("px", "");
+                                    var selectedLeftInt = $(selectedData[i]).css("left").replace("px", "");
+                                    if (parseFloat(minLeftInt) > parseFloat(selectedLeftInt)) {
+                                        minLeft = $(selectedData[i]).css("left");
+                                    }
+
+                                    // var maxLeftInt = maxLeft.replace("px", "");
+                                    // if(parseFloat(maxLeftInt) < parseFloat(selectedLeftInt))
+                                    // {
+                                    //     maxLeft = $(selectedData[i]).css("left");
+                                    // }
+                                }
+                            }
+
+                            for (var i = 0; i < selectedData.length; i++) {
+                                var leftPosition = $(selectedData[i]).css("left");
+                                var topPosition = $(selectedData[i]).css("top");
+
+                                var selectedItem = selectedData[i];
+                                if ($("#" + selectedItem.id).data("parcel") == $(this).data("parcel")) {
+
+                                    if (innerHtml == "" && Object.keys(groupedParcelList).length == 0) {
+
+                                        currentParcelId = $(this).data("parcelSfId");
+                                        firstLeft = minLeft; //leftPosition;
+                                        firstTop = topPosition;
+                                    }
+
+                                    var tempHTML = $(selectedData[i])[0];
+                                    var initialLeft = $("#" + tempHTML.id).css("left");
+                                    var initialTop = $("#" + tempHTML.id).css("top");
+                                    var divtitle = "";
+                                    if ($("#" + tempHTML.id).attr("title")) {
+                                        divtitle = $("#" + tempHTML.id).attr("title");
+                                    }
+                                    //, roomItem.AccountName
+
+                                    var initialLeftInt = initialLeft.replace("px", "");
+                                    var initialTopInt = initialTop.replace("px", "");
+                                    /*
+                                                                    initialLeftInt = parseInt(initialLeftInt);
+                                                                    initialTopInt = parseInt(initialTopInt);
+                                    */
+                                    var newLeft = initialLeftInt - firstLeft.replace("px", "");
+                                    var newTop = initialTopInt - firstTop.replace("px", "");
+                                    newLeft *= 2;
+                                    newTop *= 2;
+                                    if (maxLeft.replace("px", "") < newLeft) {
+                                        maxLeft = newLeft + "px";
+                                    }
+                                    var lastHTML = "<div title=\"" + divtitle + "\" id=\"" + tempHTML.id + "\"class=\"roomSale " + tempHTML.className + "\" style=\"left: " + newLeft + "px; top: " + newTop + "px;\"></div>"
+                                    // satılan parselleri gruplamak için container içine alındı.
+                                    if (tempHTML.classList.contains(TOOL_Sold)) {
+                                        // debugger;  
+                                        var dataValue = $("#" + tempHTML.id).data("parcelSoldSfId");
+                                        if (!groupedParcelList[dataValue]) {
+                                            groupedParcelList[dataValue] = "";
+                                        }
+                                        groupedParcelList[dataValue] += lastHTML;
+                                    }
+                                    else {
+                                        innerHtml += lastHTML;
+                                    }
+                                    //innerHtml += lastHTML;
+
+                                }
+                            }
+                            // debugger;
+                            // var sizeofTemps = $(innerHtml).size();
+                            // var minLeft = 0.0;
+                            // var minTop = 0.0;
+                            // for(var i = 0; i< sizeofTemps ; i++)
+                            // {
+                            //     var innerItem = $(innerHtml)[i];
+                            //     if(minLeft > innerItem.style.left.replace("px",""))
+                            //     {
+                            //         minLeft = innerItem.style.left.replace("px","");
+                            //     }
+                            //     // if(minTop > innerItem.style.top.replace("px",""))
+                            //     // {
+                            //     //     minTop = innerItem.style.top.replace("px","");
+                            //     // }
+                            // }
+                            // for(var i = 0; i< sizeofTemps ; i++)
+                            // {
+                            //     var innerItem = $(innerHtml)[i];
+                            //     innerItem.style.left = (innerItem.style.left.replace("px","") + minLeft) + "px";
+                            // }
+
+
+                            var keyCount = Object.keys(groupedParcelList).length;
+                            var innerHtmltemp = "";
+                            var roomWidth = 0;
+                            for (var i = 0; i < keyCount; i++) {
+
+                                if (roomWidth == 0) {
+                                    var $p = $("<div class='roomSale'></div>").hide().appendTo("body");
+                                    roomWidth = Math.round(document.getElementsByClassName('roomSale')[0].getBoundingClientRect().width * 100) / 100
+                                    $p.remove();
+                                }
+
+                                var parcelItem = groupedParcelList[Object.keys(groupedParcelList)[i]];
+                                var sfParcelId = Object.keys(groupedParcelList)[i];
+
+                                var firstDomValue = $.parseHTML(parcelItem)[0];
+                                var secondDomValue = $.parseHTML(parcelItem)[0];
+                                var lastDomValue = $.parseHTML(parcelItem)[$.parseHTML(parcelItem).length - 1];
+
+                                var firstLeft = firstDomValue.style["left"];
+                                var lastLeft = lastDomValue.style["left"];
+                                var firstTop = firstDomValue.style["top"];
+                                var lastTop = lastDomValue.style["top"];
+
+                                var containerWidth = (roomWidth + 20 + (lastLeft.replace("px", "") - firstLeft.replace("px", ""))) + "px";
+                                var containerHeight = (roomWidth + 20 + (lastTop.replace("px", "") - firstTop.replace("px", ""))) + "px";
+
+                                var paddingTop = ((roomWidth + 15 + (lastTop.replace("px", "") - firstTop.replace("px", ""))) / 4) + "px";
+
+                                var fontSize = "10px";
+
+                                var ContWidth = parseInt(containerWidth.replace("px", ""));
+                                var ContHeight = parseInt(containerHeight.replace("px", ""));
+
+
+                                var ToolTop = ((parseInt(firstTop.replace("px", ""))) / 5) + (parseInt(firstTop.replace("px", "")));
+
+                                if (ContWidth > ContHeight) {
+                                    if (ContWidth < 40) {
+                                        fontSize = "7px";
+                                    } else if (ContWidth >= 40 && ContWidth < 200) {
+                                        fontSize = "14px";
+                                    } else {
+                                        fontSize = "17px";
+                                    }
+                                } else {
+                                    if (ContHeight < 40) {
+                                        fontSize = "7px";
+                                    } else if (ContHeight >= 40 && ContHeight < 200) {
+                                        fontSize = "14px";
+                                    } else {
+                                        fontSize = "17px";
+                                    }
+                                }
+
+
+                                var accountName = firstDomValue.title;
+                                var styleWidthHeight = "width:" + containerWidth + "; height:" + containerHeight + ";'";
+                                var styleDef = "style='position: absolute; width:" + containerWidth + "; height:" + containerHeight + "; padding-top:" + paddingTop + "; font-size:" + fontSize + "; left:" + firstLeft + "; top:" + firstTop + ";'";
+                                var styleDefDeneme = "style='position: absolute; ; left:" + lastLeft + " !important; top:" + ToolTop + "px;'";
+                                //var styleDef = "style=' left:"+firstLeft+"; top:"+firstTop+";position: absolute;'";
+                                //debugger;
+                                //container üzerinde içeriğe göre div boyutu ayarlanmalı
+                                //innerHtmltemp += "<div id='"+sfParcelId+"' style='position: relative;"+styleWidthHeight+"' class='soldContainer'><div class='soldContainerText'><div class='soldContainerText' "+styleDef+">"+ accountName +"</div>"+ parcelItem + "</div></div>";
+
+                                innerHtmltemp += "<div id='" + sfParcelId + "'  class='soldContainer'><div class='soldContainerText popover'  " + styleDef + " sug='" + accountName + "'            >" + accountName + "</div>" + "<div class='tooltipdiv' " + styleDefDeneme + "  >" + accountName + "</div>" + parcelItem + "</div>";
+
+                            }
+
+                            innerHtml = '<div style="position:relative;">' + innerHtmltemp + innerHtml + '</div>';
+
+                            $(".modelDivSale").html(innerHtml);
+
+
+                            var DivHeight = (newTop + 100) + "px";
+                            //var DivWidth=(newLeft+50);
+                            //var DivWidth=(maxLeft+80);
+                            var DivWidth = parseFloat(maxLeft.replace("px", "")) + 30;
+
+                            $("#parcel-content").css("min-height", DivHeight);
+                            $("#parcel-content").css("min-width", Math.max(DivWidth, 370));
+
+                            $(".roomSale").click(function (e) {
+                                if (!$(this).hasClass(TOOL_Sold)) {
+                                    if (currentSaleToolActive) {
+                                        $(this).addClass("sellrevised");
+                                    }
+                                    else {
+                                        $(this).removeClass("sellrevised");
+                                    }
+                                    var revisedBlocks = $(".sellrevised");
+                                    //console.log('Selected Block Count : ' + revisedBlocks.size());
+
+                                    $('#SelectedCount').text('{!$Label.RC_Hall_SelectedBlock} ' + revisedBlocks.size());
+                                }
+                            });
+
+                            var selectedremoveSfId = '';
+                            $(".soldContainer").click(function (e) {
+                                //todo modal show
+                                var modal = document.getElementById("myModalRemove");
+                                modal.style.display = "block";
+                                selectedremoveSfId = $(this)[0].id;
+                            });
+                            $(".parcelRemoveButton").click(function (e) {
+
+                                if (selectedremoveSfId && selectedremoveSfId != '') {
+                                    var AgreementId = "{!currentOpportunity}";
+                                    var hallId = $(".selectedHallClass")[0].value;
+                                    // var canRemove = true;
+                                    // if(!({!IsShowManager}))
+                                    // {
+                                    //     if(AgreementId != selectedremoveSfId)
+                                    //     {
+                                    //         canRemove = false;
+                                    //     }
+                                    // }
+                                    // if(canRemove)
+                                    // {
+                                    //     APEXRemoveSale(hallId, AgreementId, selectedremoveSfId);
+                                    // }
+                                    // else
+                                    // {
+                                    //     alert("silinemez");
+                                    // }
+                                    APEXRemoveSale(hallId, AgreementId, selectedremoveSfId);
+                                }
+                            });
+
+                            var btn = document.getElementById("myBtn");
+                            var span = document.getElementsByClassName("close")[0];
+
+                            span.onclick = function () {
+                                modal.style.display = "none";
+                                myModalHide();
+
+                            }
+                            window.onclick = function (event) {
+                                if (event.target == modal) {
+                                    modal.style.display = "none";
+                                    myModalHide();
+                                }
+                            }
+                            $('.roomSale')
+                                .drop("start", function () {
+                                    // if($(this).hasClass("roomSale"))
+                                    // {
+                                    if (!$(this).hasClass(TOOL_Sold)) {
+                                        if (currentSaleToolActive) {
+                                            $(this).addClass("sellrevised");
+                                        }
+                                        else {
+                                            $(this).removeClass("sellrevised");
+                                        }
+                                        //$(this).toggleClass("sellrevised");
+                                        var revisedBlocks = $(".sellrevised");
+                                        //console.log('Selected Block Count : ' + revisedBlocks.size());
+
+                                        $('#SelectedCount').text('{!$Label.RC_Hall_SelectedBlock} ' + revisedBlocks.size());
+                                    }
+                                    // }
+                                })
+                                .drop(function (ev, dd) {
+                                    // if($(this).hasClass("roomSale"))
+                                    // {
+                                    // if(!$(this).hasClass(TOOL_Sold))
+                                    // {
+                                    //     $(this).toggleClass("sellrevised");
+                                    //     var revisedBlocks = $(".sellrevised"); 
+
+                                    //     $('#SelectedCount').text('{!$Label.RC_Hall_SelectedBlock} ' + revisedBlocks.size());
+                                    // }
+                                    // }
+                                })
+                                .drop("end", function () {
+                                    // if($(this).hasClass("roomSale"))
+                                    // {
+                                    // if(!$(this).hasClass(TOOL_Sold))
+                                    // {
+                                    //     $(this).toggleClass("sellrevised");
+                                    //     var revisedBlocks = $(".sellrevised"); 
+
+                                    //     $('#SelectedCount').text('{!$Label.RC_Hall_SelectedBlock} ' + revisedBlocks.size());
+                                    // }
+
+                                    // }
+                                    //console.log($("#" + $(this)[0].id).data("parcel"))
+                                });
+                        }
+                    });
+
+                    $(".parcelSold").hover(function () {
+                        var offset = $(this).offset();
+                        var pop = $("#popover");
+                        pop.offset({ top: offset.top - 50, left: offset.left });
+
+                        pop.html($(this).attr("sug") + "<div id=\"tail\">");
+                        pop.css("visibility", "visible");
+                    });
+
+                    $(".parcelSold").mouseleave(function () {
+                        $("#popover").css("visibility", "hidden");
+                    });
+
+
+                    $(".commandButton").click(function (e) {
+                        var selectedVal = $(this).val();
+                        currentGUID = guidGenerator();
+                        $(".approveAndRemoveNotSellable").css("display", "block");
+                        setCurrentTool(selectedVal);
+
+                    });
+                    $(".saveButton").click(function (e) {
+                        // jsSaveLayout();
+                    });
+                    $(".modeButton").click(function (e) {
+
+                        screenMode = $(this).val();
+                        if (screenMode == MODE_Design) {
+                            currentGUID = guidGenerator();
+                            setCurrentTool(TOOL_Selectable);
+                            $(".approveAndRemove").css("display", "block");
+                            var modal = document.getElementById("myModalParcel");
+                            modal.style.display = "block";
+                        }
+                        else if (screenMode == MODE_Save) {
+                            //jsSaveLayout();
+
+                            $(".currentMode").text("Current Mode : " + screenMode);
+                        }
+                    }); 
+    
+                });
+                </script>
+            </div>
+        </div>
+    </div>
+</apex:page>

@@ -1,0 +1,143 @@
+<aura:component controller="RC_PortalController" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="accept" type="List" default="['.jpg', '.jpeg', '.png']"/>
+    <aura:attribute name="multiple" type="Boolean" default="true"/>
+    <aura:attribute name="accountProfile" type="List" default="[]"/>
+    <aura:attribute name="country" type="List" default="[]"/>
+    <aura:attribute name="city" type="List" default="[]"/>
+    <aura:attribute name="attachments" type="List" default="[]"/>
+    <aura:attribute name="isExistFile" type="Boolean" default="false"/>
+    <aura:attribute name="isCountryTurkey" type="Boolean" default="false"/>
+    <aura:attribute name="points" type="String" default="..."/>
+    <aura:attribute name="contactPhone" type="String" />
+    
+    <aura:attribute name="account" type="sObject" default="{}" />
+    <c:RC_PortalHeader />
+    <div class="c-container">
+        <lightning:layout multipleRows="true">
+            <div class="main-container">
+                <lightning:layoutItem  size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem padding="" size="2">
+                            <c:RC_PortalLeftMenu />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="horizontal-medium" size="10">
+                            <div class="page-section">
+                                <ul class="slds-list_horizontal slds-has-inline-block-links_space" style = "border-bottom: 1px solid #eee; padding: 20px 0;">
+                                    <li> <a href="#" class="navigationlink active">{!$Label.c.RC_PortalFirm_Title}</a></li> 
+                                    <li> <a href="../s/companyemployee" class="navigationlink">{!$Label.c.RC_PortalComponyEmployee_Title}</a></li> 
+                                    <li> <a href="../s/catalogue" class="navigationlink">{!$Label.c.RC_Portal_Catalogue}</a></li> 
+                                    <li> <a href="../s/standinfo" class="navigationlink">{!$Label.c.RC_PortalBoothInfo}</a></li> 
+                                    <li> <a href="../s/badges" class="navigationlink">{!$Label.c.RC_PortalBadge}</a></li> 
+                                    <li> <a href="../s/invitation" class="navigationlink">{!$Label.c.RC_PortalInvitation}</a></li> 
+                                </ul>
+                            </div>
+                            <div class="page-section">
+                                <h2>{!$Label.c.RC_PortalFirm_Title}</h2>
+                                <p>{!$Label.c.RC_PortalFirm_Desc}</p>
+                            </div>
+                            <div class="page-section">
+                                <div style='display:none;'>
+                                    <lightning:input name="file1" class="form-control" type="file" label="{!$Label.c.RC_PortalFirm_ImageDesc}" 
+                                                     multiple="{!v.multiple}" accept="{!v.accept}" onchange="{!c.handleFilesChange}"/>
+                                </div>                                
+                                <aura:if isTrue="{!v.isExistFile}">
+                                    <br/>
+                                    <div class="slds-box" style='display: block;width:33% !important;'>
+                                        <aura:iteration items="{!v.attachments}" var="option" indexVar="indx">
+                                            <span style="font-weight:700;font-size:13px;">{!indx + 1} - {!option.Name}</span><br/>
+                                        </aura:iteration>
+                                    </div>
+                                    <br/>
+                                    <lightning:button label="Temizle" iconName="utility:cancel_file_request" onclick="{!c.removeFiles}" iconPosition="left"  />
+                                </aura:if>                                
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalFirm_Name}" name="firmName" class="form-control" value="{!v.account.Name}" required="true" disabled="true"/>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:select aura:id="field" label="{!$Label.c.RC_PortalFirm_Profile}" name="firmProf" class="form-control" value="{!v.account.Type}" disabled="true">
+                                            <option text="{!$Label.c.RC_PortalChoose + v.points}" value="0"></option>
+                                            <aura:iteration items="{!v.accountProfile}" var="option">
+                                                <option text="{!option.label}" value="{!option.value}" selected="{!option.selected}"></option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </div>
+                                </div>
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalFirm_Address}" name="companyAddress" class="form-control" value="{!v.account.BillingStreet}" />
+                                    </div>
+                                </div>
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <lightning:select aura:id="field" label="{!$Label.c.RC_PortalFirm_Country}" name="country" class="form-control" value="{!v.account.RC_Portal_Country__c}" onchange="{!c.changeCountry}">
+                                            <option text="{!$Label.c.RC_PortalChoose + v.points}" value="0"></option>
+                                            <aura:iteration items="{!v.country}" var="option">
+                                                <option text="{!option.label}" value="{!option.value}" selected="{!option.selected}"></option>
+                                            </aura:iteration>                                       
+                                        </lightning:select>
+                                    </div>
+                                    <aura:if isTrue="{!v.isCountryTurkey}">                             
+                                        <div class="slds-col slds-size_1-of-3">
+                                            <lightning:select aura:id="field" label="{!$Label.c.RC_PortalFirm_City}" name="city" class="form-control" value="{!v.account.RC_City_Info__c}" onchange="{!c.changeCity}">
+                                                <option text="{!$Label.c.RC_PortalChoose + v.points}" value="0"></option>
+                                                <aura:iteration items="{!v.city}" var="option">
+                                                    <option text="{!option.label}" selected="{!option.selected}"></option>
+                                                </aura:iteration>                                       
+                                            </lightning:select>
+                                        </div>
+                                    </aura:if>
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalFirm_PostCode}" name="postCode" class="form-control" value="{!v.account.BillingPostalCode}" />
+                                    </div>
+                                </div>
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <lightning:input type="email" aura:id="field" label="{!$Label.c.RC_PortalFirm_Email}" name="email" class="form-control" value="{!v.account.RC_Email__c}" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-3" onkeypress="{!c.keyCheck}">
+                                        <lightning:input type="field" aura:id="field" label="{!$Label.c.RC_PortalFirmAccountPhone}" name="phone" class="form-control" value="{!v.account.Phone}" 
+                                                         messageWhenBadInput="Lütfen geçerli bir telefon numarası giriniz." disabled="true"/>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-3" onkeypress="{!c.keyCheck}">
+                                        <!--<lightning:input type="tel" aura:id="field" label="{!$Label.c.RC_PortalFirm_Fax}" name="fax" class="form-control" value="{!v.account.Fax}" disabled="true"/>-->
+                                        <lightning:input type="tel" aura:id="field" label="{!$Label.c.RC_PortalFirmContactPhone}" name="fax" class="form-control" value="{!v.contactPhone}" disabled="true"/>
+                                    </div>
+                                </div>
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalFirm_TaxNo}" name="vergiNo" class="form-control" value="{!v.account.RC_Tax_Number__c}" disabled="true"/>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalFirm_TaxChamber}" name="vergiDairesi" class="form-control" value="{!v.account.RC_Tax_Office__c}" disabled="true"/>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-3" onkeypress="{!c.keyCheck}">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalFirm_MersisNo}" name="mersisNo" class="form-control" value="{!v.account.RC_Mersis_Number__c}" maxlength="11" disabled="true"/>
+                                    </div>
+                                </div>
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning:input type="url" aura:id="field" label="{!$Label.c.RC_PortalFirm_WebSite}" name="webSite" class="form-control" value="{!v.account.Website}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem> 
+                    </lightning:layout>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto" size="12">
+                    <div class="page-footer">
+                        <div class='approve'>
+                            <div class='approveL'>
+                                <p>{!$Label.c.RC_Portal_SaveContinue}</p> 
+                                <span>{!$Label.c.RC_PortalEmployee_Title}</span>
+                            </div>
+                            <div class='approve'>
+                                <lightning:button class='approved' variant="brand" label=">" onclick="{!c.approve}" /></div>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+            </div>
+        </lightning:layout>
+    </div>
+</aura:component>

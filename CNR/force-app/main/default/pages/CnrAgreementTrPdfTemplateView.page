@@ -1,0 +1,644 @@
+<apex:page standardStylesheets="false" standardController="RC_Fair__c" renderAs="pdf"  applyHtmlTag="false" showHeader="false" title="Sözleşme Çıktısı" language="TR" extensions="CnrAgreementPdfTemplateController" applyBodyTag="false">
+    <head>       
+        <style type="text/css">
+            
+            @page
+            {
+           	 	margin-top:0%; 
+            	margin-left: 5%;
+	            margin-right:5%;
+            	margin-bottom:12%;           
+            	size: A4;
+            	
+            	background-size: auto;       
+            	background-repeat: no-repeat;
+            	background-position: center top;
+            
+            
+            	@top-left
+            	{
+            		content : element(top-left-div);
+            	}
+            
+            	@top-center
+            	{
+            		content : element(top-center-div);
+            	}
+            
+            	@top-right
+            	{           
+            		content : element(top-right-div) ;
+            	}
+            
+            	@bottom-left
+            	{
+            		content : element(bottom-left-div);
+            	}
+            
+            	@bottom-center
+            	{
+            		content : element(bottom-center-div);
+            		<!--"Sayfa " counter(page) " / " counter(pages);-->
+            	}
+            
+            	@bottom-right
+            	{
+            		content : element(bottom-right-div);
+            	}
+            
+            }
+            
+            .top-left-div
+            {
+            position: running(top-left-div);
+            text-align:left;     
+            
+            }
+            
+            .top-center-div
+            {
+            position: running(top-center-div);
+            text-align:center;
+            padding-left:8px;
+            padding-right:8px;
+            padding-bottom:8px;
+            }
+            
+            .top-right-div
+            {
+            position: running(top-right-div);               
+            text-align:right;
+            }
+            
+            .bottom-left-div
+            {
+            position: running(bottom-left-div);   
+            text-align:left; 
+            
+            }
+            .bottom-center-div
+            {
+            position: running(bottom-center-div);
+            text-align:center;  
+            padding-left:8px;
+            padding-right:8px;
+            }
+            .bottom-right-div
+            {
+            position: running(bottom-right-div);
+            text-align:right;
+            }           
+            
+            .pagenumber:before 
+            {
+            content: counter(page);
+            }
+            
+            .pagecount:before 
+            {
+            content: counter(pages);
+            }
+            
+            .content{
+            
+            font-size:10px;
+             
+            }
+            
+            .sozlesme{
+            font-size:12px;
+            }
+            
+            table td ,table th{
+            border-bottom:1px solid black;
+            padding: 2px;
+            word-wrap: break-word;
+            }
+            
+            
+            table { 
+            border-collapse: collapse; 
+            }
+            
+            .bankTable td , .borderTable th{
+            border : 1px solid black !important;
+            }
+            
+            body{
+            font-family: Arial Unicode MS  !important;
+            }
+            
+            .infoDiv{
+            font-size: 17px !important;
+            border: 2px solid black !important;
+            background: #EC1D23 !important;
+            color: white !important;
+            font-weight:1000 !important;
+            border-top-right-radius: 1px 15px!important;
+            
+            }
+            
+        </style>
+        <!-- HEADER INFO BEGIN-->
+        <div class="top-left-div "></div>
+        <div class="top-center-div ">
+           <!-- <div><img src="{!URLFOR($Resource.dummyLogo)}" height="130px"  /></div> -->
+        </div>
+        <div class="top-right-div "></div>
+        <!-- HEADER INFO END-->
+        
+        <!-- FOOTER INFO BEGIN-->
+        <div class="bottom-left-div ">
+        
+        </div>
+         <div class="bottom-center-div ">
+            <apex:image height="60" url="{!URLFOR($Resource.istanbulFooter)}" rendered="{!IF(accountName == 'istanbul fuarcilik a.ş.',true,false)}"/>
+            <apex:image height="60" url="{!URLFOR($Resource.pozitifFooter)}" rendered="{!IF(accountName == 'pozitif fuarcilik a.ş.',true,false)}"/>
+            <apex:image height="60" url="{!URLFOR($Resource.tepeFooter)}" rendered="{!IF(accountName == 'tepe fuarcilik a.ş.',true,false)}"/>
+            
+            <!--<img src="{!URLFOR($Resource.CNR_Footer)}" height="60px"  style="margin-top:-20px;" /> -->
+        	<!--<div style="font-size:10px">Sayfa <span style="font-size:10px" class="pagenumber"/> / <span style="font-size:10px" class="pagecount"/></div> -->
+        </div>
+        <div class="bottom-right-div "></div>
+        <!-- FOOTER INFO END--> 
+    </head>
+    <body>
+        <div class="content">
+            <div>
+                
+                <!-- <img src="{!imgSrc}" height="169px" rendered="{!IF(imgSrc == 'empty',false,true)}"/> -->
+                
+                <apex:image height="169" url="{!imgSrc}" rendered="{!IF(imgSrc == 'empty',false,true)}"/>
+
+                <div style="{!IF(imgSrc == 'empty','height:169px;background-color:white;display:block','display:none;')}" >
+                	<span style="font-size:20px;vertical-align:middle">Fuar kartı üzerinde logo bulunmamaktadır. Lütfen yetkililerle iletişime geçiniz.</span>
+                </div>
+            </div>
+            
+            <table width="100%">
+                <tr width="100%">
+                    <td width="50%" style="border:none !important;">
+                        <apex:outputText value="{0, date, dd/MM/yyyy}">
+                           <apex:param value="{!TODAY()}" /> 
+                        </apex:outputText> 
+                       
+                    </td>
+                    <td width="50%" style="border:none !important;text-align:right !important;">000001</td>
+                </tr>
+            </table>   <!-- TARİH/DOSYA NO -->
+            
+            <!-- #414143 header color  -->
+            
+            <table width="100%" style="background:#F1F1F3 !important;" > 
+                <tr >
+                    <td colspan="3" style="background:#EC1D23;color:white;font-size:13px;border:none !important">FİRMA BİLGİLERİ</td> 
+                    <td colspan="3" style="font-size:13px !important;text-align:left;border:none !important;background:#FFF;">&nbsp;&nbsp;MÜŞTERİ TEMSİLCİSİ : </td> 
+                </tr>
+                
+                <tr>
+                    <td colspan="1" style="vertical-align: top;line-height: 25px;">Firma Ünvanı*</td>
+                    <td colspan="3" style="vertical-align: top;line-height: 25px;"></td>
+                    <td colspan="1" style="vertical-align: top;line-height: 25px;">Vergi D. / Vergi No</td>
+                    <td colspan="1" style="vertical-align: top;line-height: 25px;"></td>
+                </tr>
+                <tr>
+                    <td  colspan="1" style="height:50px;vertical-align: top;">Adres</td>
+                    <td colspan="5"  style="vertical-align: top;"></td>
+                </tr>
+                <tr style="line-height: 25px;">
+                    <td colspan="2" >Yetkili Kişi : </td>
+                    <td colspan="2" >Telefon No : </td>
+                    <td colspan="2" >E-Posta : </td>
+                </tr>
+                <!--<tr style="line-height: 25px;">
+                    <td style="width:15%">Vergi D. / Vergi No</td>
+                    <td style="width:1%"></td>
+                    <td style="width:28%;">{!acc.RC_Tax_Number__c}</td>
+                    
+                </tr> -->
+                <tr>
+                    <td colspan="6" style="border:none !important;padding-top:10px">* Firma Unvanı ve adresinin yeni tarihli Ticaret Sicil Gazetesi ile aynı olması gerekmektedir.</td>
+                </tr> 
+                
+            </table>  <!-- GENEL BİLGİLER -->
+            
+            <table> 
+                <thead>
+                    <tr style="background:#EC1D23;color:white;font-size:12px;">
+                        <th style="width:380px;border:none !important" >Ürün Adı</th>
+                        <th style="width:100px;text-align:center;border:none !important">MİKTAR</th>
+                        <th style="width:100px;text-align:center;border:none !important">BİRİM FİYATI (TL)</th> 
+                        <th style="width:100px;text-align:right;border:none !important">TUTAR(TL)</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                        <tr>
+                            <td style="background:#F1F1F3"></td>
+                            <td style="background:#B6BFC7;text-align:center"></td>
+                            <td style="background:#D2D3D5;text-align:center"></td>
+                            <td  style="background:#B6BFC7;text-align:right">
+                                <apex:outputText value="{0, number, ###,###,###,##0.00}" >
+                                    <apex:param value=""/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+
+                    <tr>
+                        <td  style="background:#F1F1F3">NET TUTAR</td>
+                        <td  style="background:#B6BFC7;text-align:center"></td>
+                        <td  style="background:#D2D3D5;text-align:center"></td>
+                        <td  style="text-align:right;background:#B6BFC7">
+                            <apex:outputText value="{0, number, ###,###,###,##0.00}" >
+                                <apex:param value=""/>
+                            </apex:outputText>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td style="background:#F1F1F3">KDV(%18 KDV )</td>
+                        <td  style="background:#B6BFC7;text-align:center"></td>
+                        <td  style="background:#D2D3D5;text-align:center"></td>
+                        <td style="text-align:right;background:#B6BFC7">
+                            <apex:outputText value="{0, number, ###,###,###,##0.00}" >
+                                <apex:param value=""/>
+                            </apex:outputText>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td  style="background:#F1F1F3">DAMGA VERGİSİ</td>
+                         <td  style="background:#B6BFC7;text-align:center"></td>
+                        <td  style="background:#D2D3D5;text-align:center"></td>
+                        <td  style="text-align:right;background:#B6BFC7">
+                            <apex:outputText value="{0, number, ###,###,###,##0.00}" >
+                                <apex:param value=""/>
+                            </apex:outputText>
+                        </td>
+                        
+                    </tr>
+                    <tr >
+                        <td  style="background:#F1F1F3">KATILIM BEDELİ</td>
+                         <td  style="background:#B6BFC7;text-align:center"></td>
+                        <td  style="background:#D2D3D5;text-align:center"></td>
+                        <td  style="text-align:right;background:#B6BFC7">
+                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                <apex:param value=""/>
+                            </apex:outputText>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td  style="background:#F1F1F3">GENEL TOPLAM</td>
+                         <td  style="background:#B6BFC7;text-align:center"></td>
+                        <td  style="background:#D2D3D5;text-align:center"></td>
+                        <td  style="text-align:right;background:#B6BFC7">
+                            <apex:outputText value="{0, number, ###,###,###,##0.00}" >
+                                <apex:param value=""/>
+                            </apex:outputText>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td  style="background:#F1F1F3">YAZI İLE</td>
+                         <td  style="background:#B6BFC7;text-align:center"></td>
+                        <td  style="background:#D2D3D5;text-align:center"></td>
+                        
+                        <td  style="text-align:right;background:#B6BFC7"></td>
+                    </tr>
+                    
+                </tbody>
+            </table>  <!-- ÜRÜN TABLOSU -->
+            
+			
+            <table>
+                <tr>
+                    <td style="border:none !important;vertical-align:top !important" width="60%">
+                        <table width="100%">  
+                            <thead>
+                                <tr style="background:#EC1D23;color:white;font-size:12px;">
+                                    <th style="border:none !important">ÖDEMELER</th>
+                                    <th style="text-align:center;border:none !important">TARİH</th>
+                                    <th style="text-align:center;border:none !important">ÖDEME SEKLİ</th> 
+                                    <th style="text-align:right;border:none !important">TUTAR (TL)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:variable var="cnt" value="{!0}" /> 
+
+                                    <tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                	<tr>
+                                        <td style="background:#F1F1F3">#</td>
+                                        <td style="background:#B6BFC7;text-align:center;">
+                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                <apex:param value="" /> 
+                                            </apex:outputText> 
+                                        </td>
+                                        <td style="background:#D2D3D5;text-align:center;"></td>
+                                        <td style="background:#B6BFC7;text-align:right;">
+                                            
+                                            <apex:outputText value="{0, number, ###,###,###,##0.00}">
+                                                <apex:param value=""/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                
+                                    <apex:variable var="cnt" value="{!cnt+1}"/>
+
+                                
+                                <tr>
+                                    <td style="background:#F1F1F3">Toplam</td>
+                                    <td style="background:#B6BFC7"></td>
+                                    <td style="background:#D2D3D5"></td>
+                                    <td style="background:#B6BFC7;text-align:right;"></td>
+                                </tr>
+                                
+                            </tbody>
+                        </table> <!-- ÖDEMELER -->
+                    </td>
+					<td style="border:none !important;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td style="border:none !important;" width="42%">
+                                
+                       <table style="{!IF(accountName == 'tepe fuarcilik a.ş.','display:block;','display:none;')}">
+                            <thead>
+                                
+                                <th style="background:#EC1D23;color:white;font-size:12px;border:none !important;width:35%;">BANKA ADI</th>
+                                <th style="background:#414143;color:white;font-size:12px;border:none !important;width:65%;">DENİZBANK</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5;">ŞUBE KODU</td>
+                                    <td style="border:none !important;">0134</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">ŞUBE ADI</td>
+                                    <td style="border:none !important;">DENİZBANK BAKIRKÖY ÇARŞI ŞB.</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">TL IBAN</td>
+                                    <td style="border:none !important;">TR43 0013 4000 0163 1886 1000 01</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">€ IBAN</td>
+                                    <td style="border:none !important;">TR86 0013 4000 0163 1886 1000 03</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                       <table style="{!IF(accountName == 'istanbul fuarcilik a.ş.','display:block;','display:none;')}">
+                            <thead>
+                                
+                                <th style="background:#EC1D23;color:white;font-size:12px;border:none !important;width:35%;">BANKA ADI</th>
+                                <th style="background:#414143;color:white;font-size:12px;border:none !important;width:65%;">DENİZBANK</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5;">ŞUBE KODU</td>
+                                    <td style="border:none !important;">0134</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">ŞUBE ADI</td>
+                                    <td style="border:none !important;">DENİZBANK BAKIRKÖY ÇARŞI ŞB.</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">SWIFT</td>
+                                    <td style="border:none !important;">DENITRIS</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">TL IBAN</td>
+                                    <td style="border:none !important;">TR20 0013 4000 0041 9951 1000 01</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">€ IBAN</td>
+                                    <td style="border:none !important;">TR63 0013 4000 0041 9951 1000 03</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">$ IBAN</td>
+                                    <td style="border:none !important;">TR90 0013 4000 0041 9951 1000 02</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">£ IBAN</td>
+                                    <td style="border:none !important;">TR19 0013 4000 0041 9951 1000 19</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                       <table style="{!IF(accountName == 'pozitif fuarcilik a.ş.','display:block;','display:none;')}">
+                            <thead>
+                                
+                                <th style="background:#EC1D23;color:white;font-size:12px;border:none !important;width:35%;">BANKA ADI</th>
+                                <th style="background:#414143;color:white;font-size:12px;border:none !important;width:65%;">DENİZBANK</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5;">ŞUBE KODU</td>
+                                    <td style="border:none !important;">0134</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">ŞUBE ADI</td>
+                                    <td style="border:none !important;">DENİZBANK BAKIRKÖY ÇARŞI ŞB.</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">SWIFT</td>
+                                    <td style="border:none !important;">DENITRIS</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">TL IBAN</td>
+                                    <td style="border:none !important;">TR32 0013 4000 0041 9952 8000 01</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">€ IBAN</td>
+                                    <td style="border:none !important;">TR75 0013 4000 0041 9952 8000 03</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">$ IBAN</td>
+                                    <td style="border:none !important;">TR05 0013 4000 0041 9952 8000 02</td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none !important;background:#D2D3D5">£ IBAN</td>
+                                    <td style="border:none !important;">TR19 0013 4000 0041 9951 1000 19</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br/><br/>
+                    </td>
+                </tr>
+            </table> <!-- BANKA -->
+            
+            
+            <p style="font-size:12px !important;">
+                <apex:outputText escape="false" value="{!fair.RC_Agreement_Text_TR__c}"/>
+            </p>
+            <img src="{!URLFOR($Resource.Kase)}" height="115px"  /> 
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            <p style="font-size:12px;margin-bottom:-80px !important">
+                <apex:outputText escape="false" value="{!fair.RC_Agreement_Rules_TR__c}"/>
+            </p>
+ 			
+        </div>   
+    </body>
+</apex:page>

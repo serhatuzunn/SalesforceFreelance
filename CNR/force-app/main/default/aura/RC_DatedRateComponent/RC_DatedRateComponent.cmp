@@ -1,0 +1,26 @@
+<aura:component controller="RC_DateRateComponentController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<aura:handler name="init" value="{!this}" action="{!c.init}"></aura:handler>
+    
+    <aura:attribute name="euroRate" type="Decimal" default="0" />
+    <aura:attribute name="dolarRate" type="Decimal" default="0" />
+    <aura:attribute name="rateDate" type="String" />
+    
+    <table style="background-color: white; height: 100px">
+        <tr>
+            <td style="width:3%">&nbsp;</td>
+            <td style="width:47%; font-size:14px"><b>Current Rate</b></td>
+            <td style="width:50%">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:3%">&nbsp;</td>
+            <td style="width:47%; font-size:14px">Date: {!v.rateDate}</td>
+            <td style="width:50%">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:3%">&nbsp;</td>
+            <td style="width:47%; font-size:14px">Euro: {!v.euroRate}</td>
+            <td style="width:50%; font-size:14px">Dolar: {!v.dolarRate}</td>
+        </tr>
+    </table>
+    
+</aura:component>

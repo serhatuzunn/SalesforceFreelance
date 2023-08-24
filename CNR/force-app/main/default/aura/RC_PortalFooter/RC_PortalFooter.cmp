@@ -1,0 +1,15 @@
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:attribute name="page" type="string" default=""/>
+    <div>
+        <div class="page-footer">
+            <div class='approve'>
+                <div class='approveL'>
+                    <p>Kaydet ve devam et</p> 
+                    <span>{!v.page}</span>
+                </div>
+                <div class='approve'>
+                    <lightning:button class='approved' variant="brand" label=">" onclick="{!c.approve }" /></div>
+            </div>
+        </div>
+    </div>
+</aura:component>

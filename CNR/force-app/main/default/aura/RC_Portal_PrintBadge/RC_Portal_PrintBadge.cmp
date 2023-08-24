@@ -1,0 +1,42 @@
+<aura:component controller="RC_PortalController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/> 
+    <aura:attribute name="data" type="List" default="[]" />    
+    <div class="book">
+        <div class="page">
+            <div class="slds-no-print">
+                <lightning:buttonIcon class="printButton" iconName="utility:print" size="large" onclick="{!c.handlePrint}" />
+                &nbsp;{!$Label.c.RC_PortalPrintWarning}
+            </div>
+            <div class="subpage">
+                <div class="ticket-main">
+                    <aura:iteration items="{!v.data}" var="item">
+                        <div class="page2">
+                            <div align="center">
+                                <div class="t-logo">
+                                    <p>
+                                        <span>
+                                            <img class="ticket-logo" src="{!$Resource.RC_PortalResources + '/Badge/cnrexpo.png'}" />
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="title-exhibitors" align="center"><img class="img-responsive" src="{!$Resource.RC_PortalResources + '/Badge/exhibitor-title.png'}" /></div>
+                            <div class="main-text" align="center">
+                                <div style="min-height:50px; max-height:100px;"><h3><strong><i style="font-size:calc(85%);"> {!item.Fair__r.Name}</i></strong></h3></div>
+                                <div><h3> {!item.RC_FullName__c}</h3></div>
+                                <div><h4> {!item.Account__r.Name}</h4><h4> {!item.RC_Country__c}</h4></div>
+                                <div class="main-code">
+                                    <img src="{!'https://www.barcodesinc.com/generator/image.php?code=' + item.RC_Barcode__c + '&amp;type=C128B&amp;width=300&amp;height=50&amp;xres=1&amp;font=5'}"></img>
+                                </div>
+                            </div>
+                            <div align="center" class="title-holding">
+                                <img class="img-responsive" src="{!$Resource.RC_PortalResources + '/Badge/exhibitor-holding.png'}" />
+                            </div>
+                            
+                        </div>
+                    </aura:iteration>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

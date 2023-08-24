@@ -1,0 +1,232 @@
+<aura:component controller="RC_PortalController" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="initWrapper" type="sObject" 	default="[]"/>
+    <aura:attribute name="accept" type="List" default="['.jpg', '.jpeg', '.png']"/>
+    <aura:attribute name="multiple" type="Boolean" default="false"/>
+    <aura:attribute name="selectedMainSector" type="string" default=""/>
+    <aura:attribute name="selectedSubSector" type="string" default=""/>
+    <aura:attribute name="selectedProductGroup" type="string" default=""/>
+    <aura:attribute name="isDisabledSubSectorPicklist" type="boolean"  default="true"/>
+    <aura:attribute name="isDisabledProductGroupPicklist" type="boolean"  default="true"/>
+    <aura:attribute name="attachments" type="List" default="[]"/>
+    <aura:attribute name="pills" type="sObject" default="[]"/>
+    <aura:attribute name="addedPills" type="List" default="[]"/>
+    <aura:attribute name="selectedPills" type="List" default="[]"/>
+    <aura:attribute name="brand" type="String" default=""/>
+    <aura:attribute name="brands" type="sObject" default="[]"/>
+    <aura:attribute name="visibleBrand" type="boolean" default="false" /> 
+    <aura:attribute name="visible" type="boolean" default="false" /> 
+    <aura:attribute name="selectedContact" type="Object" default="" /> 
+    <aura:attribute name="VfPageMethod" type="object"/>
+    <aura:attribute name="isExistFile" type="Boolean" default="false"/>
+    <aura:attribute name="selectedCompanyRep" type="String" default=""/>
+    <aura:attribute name="imageMini" type="String" default=""/>
+    <aura:attribute name="contactPhone" type="String" default=""/>
+    
+    <c:RC_PortalHeader />
+    <div class="c-container">                        
+        <lightning:layout multipleRows="true">
+            <div class="main-container">
+                <lightning:layoutItem  size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem padding="" size="2">
+                            <c:RC_PortalLeftMenu />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="horizontal-medium" size="10">
+                            <div class="page-section">
+                                <ul class="slds-list_horizontal slds-has-inline-block-links_space" style = "border-bottom: 1px solid #eee; padding: 20px 0;">
+                                    <li> <a href="../s/firminfo" class="navigationlink">{!$Label.c.RC_PortalFirm_Title}</a></li> 
+                                    <li> <a href="../s/companyemployee" class="navigationlink">{!$Label.c.RC_PortalComponyEmployee_Title}</a></li> 
+                                    <li> <a href="#" class="navigationlink active">{!$Label.c.RC_Portal_Catalogue}</a></li> 
+                                    <li> <a href="../s/standinfo" class="navigationlink">{!$Label.c.RC_PortalBoothInfo}</a></li> 
+                                    <li> <a href="../s/badges" class="navigationlink">{!$Label.c.RC_PortalBadge}</a></li> 
+                                    <li> <a href="../s/invitation" class="navigationlink">{!$Label.c.RC_PortalInvitation}</a></li> 
+                                </ul>
+                            </div>
+                            <div class="page-section">
+                                <h2>{!$Label.c.RC_Portal_Catalogue}</h2>
+                                <p>{!$Label.c.RC_PortalCatalogue_Desc}</p> 
+                            </div>
+                            <div class="page-section">
+                                <div style='display: flex;'>
+                                    <lightning:input name="file1" class="form-control" type="file" label="{!$Label.c.RC_PortalCatalogue_FirmLogo}" multiple="{!v.multiple}" accept="{!v.accept}" onchange="{!c.handleFilesChange}"/>
+                                </div>
+                                <aura:if isTrue="{!v.isExistFile}">
+                                    <br/>
+                                    <div class="slds-box" style='display: block;width:fit-content;'>
+                                        <aura:iteration items="{!v.attachments}" var="option" indexVar="indx">
+                                            <!--<span style="font-weight:700;font-size:13px;">{!indx + 1} - {!option.Name}</span>&nbsp;-->
+                                            <img id="imgMini" name="imgMini" aura:id="imgMini" style="max-width:150px; max-height:75px;" src="{!v.imageMini}" alt="" /><br/>
+                                            <span style="font-weight:700;font-size:13px;">{!option.Name}</span>
+                                        </aura:iteration>
+                                    </div>
+                                    <br/>
+                                    <lightning:button label="Temizle" iconName="utility:cancel_file_request" onclick="{!c.removeFiles}" iconPosition="left"  />
+                                </aura:if>
+                                <div style='display:flex;'>
+                                    <lightning:select value="{!v.selectedCompanyRep}" aura:id="contact" label="{!$Label.c.RC_PortalCatalogue_Representative}" name="componyRepresentative" class="form-control" required="true" onchange="{!c.changeCompanyRep}">
+                                        <option text="{!$Label.c.RC_Portal_Choose}" value="0"></option>
+                                        <aura:iteration items="{!v.initWrapper.contactList}" var="item">
+                                            <option text="{!item.label}" value="{!item.value}" selected="{!item.selected}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </div>
+                                <div style='display: flex;'>
+                                    <lightning:input aura:id="field" label="{!$Label.c.RC_PortalCatalogue_Brand}" name="componyBrand" class="form-control" required="true" value="{!v.brand}" />
+                                    <lightning:button variant="brand" class='button' label="{!$Label.c.RC_Portal_Add}" onclick="{!c.AddBrand}" />
+                                </div>
+                                <aura:if isTrue="{!v.visibleBrand}">
+                                    <div style='display: flex;'>
+                                        <lightning:pillContainer label="Marka" items="{!v.brands}" onitemremove="{!c.RemoveBrand}"/>                             
+                                    </div>
+                                </aura:if>
+                                <div class="divDisp">
+                                    <lightning:select value="{!v.selectedMainSector}" name="Sektör" label="{!$Label.c.RC_PortalCatalogue_Sector}" required="false" class="form-control" onchange="{!c.mainSectorOnChange}">
+                                        <option text="{!$Label.c.RC_Portal_Choose}" value="0"></option>
+                                        <aura:iteration var="option" items="{!v.initWrapper.Sector.sectorList}">
+                                            <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <lightning:select value="{!v.selectedSubSector}" name="Alt Sektör" label="{!$Label.c.RC_PortalCatalogue_SubSector}" required="false" class="form-control" onchange="{!c.subSectorOnChange}" disabled="{!v.isDisabledSubSectorPicklist}">
+                                        <option text="{!$Label.c.RC_Portal_Choose}" value="0"></option>
+                                        <aura:iteration var="option" items="{!v.initWrapper.Sector.subSectorList}">
+                                            <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <lightning:select value="{!v.selectedProductGroup}" name="Ürün Grubu" label="{!$Label.c.RC_PortalCatalogue_ProductGroup}" required="false" class="form-control"  disabled="{!v.isDisabledProductGroupPicklist}">
+                                        <option text="{!$Label.c.RC_Portal_Choose}" value="0"></option>
+                                        <aura:iteration var="option" items="{!v.initWrapper.ProductGroupList}">
+                                            <option label="{!option.label}" value="{!option.value}">{!option.label}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <lightning:button variant="brand" class='button' label="{!$Label.c.RC_Portal_Add}" onclick="{!c.AddPill}" />
+                                </div>
+                                <aura:if isTrue="{!v.visible}">
+                                    <div style='display: flex;'>
+                                        <lightning:pillContainer label="Ürün Grubu" items="{!v.pills}" onitemremove="{!c.pillRemove}"/>                             
+                                    </div>
+                                </aura:if>
+                                <div style='display:flex;width: 70%;'>
+                                    <p>{!$Label.c.RC_PortalCatalogue_CompanyProfileDesc}</p>
+                                </div>
+                                <div class="divDisp">
+                                    <lightning:textarea aura:id="field" name="trText" label="{!$Label.c.RC_PortalCatalogue_CompanyProfile + ' (TR)'}" class="form-control" required="true" value="{!v.initWrapper.account.RC_Firm_Info_TR__c}" maxlength="250"></lightning:textarea>
+                                    <lightning:textarea aura:id="field" name="enText" label="{!$Label.c.RC_PortalCatalogue_CompanyProfile + ' (ENG)'}" class="form-control" required="true" value="{!v.initWrapper.account.RC_Firm_Info_EN__c}" maxlength="250"></lightning:textarea>                                    
+                                </div>
+                                <table style="width:100%">
+                                    <tr>
+                                        <td style="width:50%; text-align:right; font-size: smaller">
+                                            <span class="floatToRight">{!250-v.initWrapper.account.RC_Firm_Info_TR__c.length}&nbsp;{!$Label.c.RC_PortalRemainChar}</span>
+                                        </td>
+                                        <td style="width:50%; text-align:right; font-size: smaller">
+                                            <span class="floatToRight">{!250-v.initWrapper.account.RC_Firm_Info_EN__c.length}&nbsp;{!$Label.c.RC_PortalRemainChar}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div style='display:flex;margin-top: -25px;'>
+                                    <lightning:button class="button" variant="brand" label="{!$Label.c.RC_PortalCatalogue_Preview}" onclick="{!c.preview }" />
+                                </div>
+                            </div>
+                            <!--<c:RC_PortalFooter page="Stand Bilgileri"/>-->
+                            <div class="page-footer">
+                                <div class='turnback'>
+                                    <lightning:button onclick="{!c.turnBack }" class="turnbackButton">
+                                        <i style="font-size: 32px;color: #888;">&lt;</i><span style="font-weight: 500;color: #888;padding: 6px 0px 0px 3px;">{!$Label.c.RC_Portal_Back}</span>
+                                    </lightning:button>
+                                </div>
+                                <div class='approve'>
+                                    <div class='approveL'>
+                                        <p>{!$Label.c.RC_Portal_SaveContinue}</p> 
+                                        <span>{!$Label.c.RC_PortalBoothInfo}</span>
+                                    </div>
+                                    <div class='approve'>
+                                        <lightning:button class='approved' variant="brand" label=">" onclick="{!c.approve}" /></div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem> 
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </div>
+        </lightning:layout>
+    </div>
+    
+    <div id="modaloverlay" class="modaloverlay" style="display:none;
+                                                       position: absolute;
+                                                       background-color: rgb(0, 0, 0, 0.5);
+                                                       width: 100%;
+                                                       height: 860px;">
+        <div id="modal" class="modal">
+            <span onclick="{!c.closeModal }" class="close">&times;</span>
+            <div id="inner" class="inner">
+                <div class="ligth-content">
+                    <table class="tbl">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" style="background: #555; height: 30px;padding: 0;width: 100%;"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="height: 5px; padding: 0;"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="background: #555; height: 5px; padding: 0;"></td>
+                            </tr>
+                            <tr>
+                                <td id="accountName" style="font-size: 16px; font-weight: bold;">5 şubat yayınları</td>
+                                <td style="text-align: right;"> <img id="imgLogo" style="max-width:300px; max-height:147px; margin:4px;" src="" alt="" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="tbl">
+                        <tbody>
+                            <tr>
+                                <td class="nowrap" style="font-weight: bold;"> {!$Label.c.RC_PortalCatalogue_Representative} </td>
+                                <td id="contactName"></td>
+                            </tr>
+                            <tr>
+                                <!--<td class="nowrap" style="font-weight: bold;"> {!$Label.c.RC_PortalCatalogue_CompanyProfile}</td>
+                                <td id="Type"></td>-->
+                            </tr>
+                            <tr>
+                                <td class="" style="font-weight: bold;"> {!$Label.c.RC_PortalFirm_Address}</td>
+                                <td id="Address"></td>
+                            </tr>
+                            <tr>
+                                <td class="nowrap" style="font-weight: bold;"> {!$Label.c.RC_PortalFirm_Email} </td>
+                                <td id="Email"></td>
+                            </tr>
+                            <tr>
+                                <td class="nowrap" style="font-weight: bold;"> {!$Label.c.RC_PortalFirm_Phone} </td>
+                                <td id="Phone"></td>
+                            </tr>
+                            <tr>
+                                <td class="nowrap" style="font-weight: bold;"> {!$Label.c.RC_PortalFirmContactPhone}</td>
+                                <td id="Fax"></td>
+                            </tr>
+                            <tr>
+                                <td class="nowrap" style="font-weight: bold;">{!$Label.c.RC_PortalCatalogueBrands}</td>
+                                <td id="brandsList"></td>
+                            </tr>
+                            <tr>
+                                <td class="nowrap" style="font-weight: bold;">{!$Label.c.RC_PortalCatalogue_ProductGroup}</td>
+                                <td id="pillList"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="tbl">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <div style="margin-bottom: 20px; margin-top: 14px; font-weight: bold;">Şirket Tanıtımı</div>
+                                    <p id="FirmInfoTR"></p>
+                                    <br/>
+                                    <div style="margin-bottom: 20px; margin-top: 14px; font-weight: bold;">Company Information</div>
+                                    <p id="FirmInfoEN"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

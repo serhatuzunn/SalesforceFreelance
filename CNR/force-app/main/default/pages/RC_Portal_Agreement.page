@@ -1,0 +1,17 @@
+<apex:page >
+    <apex:includeLightning />
+    <div id="context" />
+    <script>
+    var session = "{!$API.Session_ID}";
+    $Lightning.use("c:RC_PortalApp", function() {
+        debugger;
+        $Lightning.createComponent(
+            "c:RC_Portal_Agreement",
+           {SessionId:session},
+            "context",
+            function(cmp) {
+                console.log(cmp);
+            });
+    });
+    </script>
+</apex:page>

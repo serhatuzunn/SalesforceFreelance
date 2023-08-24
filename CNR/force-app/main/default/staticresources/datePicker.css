@@ -1,0 +1,7 @@
+.slds-dropdown-trigger_click.slds-is-open slds-dropdown, .slds-dropdown-trigger--click.slds-is-open .slds-dropdown {
+
+display: inline-table !important;
+	visibility: visible;
+	opacity: 1;
+
+}

@@ -1,0 +1,75 @@
+<aura:component controller="RC_PdfPrintOptionsController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"></aura:handler>
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="selectedPdf" type="string" />
+    <aura:attribute name="selectedPdfLabel" type="string" />
+    <aura:attribute name="showErrorMessage" type="boolean" default="false" />
+    <aura:attribute name="showImages" type="boolean" default="false" />
+    <aura:attribute name="showVats" type="boolean" default="false" />
+    <aura:attribute name="showCheckBoxes" type="boolean" default="false" />
+    <aura:attribute name="showCheckBoxesKk" type="boolean" default="false" />
+    <aura:attribute name="projectQuotation" type="boolean" default="false" />
+    
+    <aura:attribute name="isFairPDF" type="boolean" default="false" />
+    <aura:attribute name="isAgreementPDF" type="boolean" default="false" />
+    
+    <lightning:layout horizontalAlign="center" multipleRows="false">
+        <aura:if isTrue="{!v.isAgreementPDF}">
+            <lightning:layoutItem padding="around-small">
+                <lightning:verticalNavigationSection label="Sözleşme Teklif Çıktıları">
+                    <lightning:verticalNavigationItemIcon label="Sözleşme PDF TR"
+                                                          name="CnrAgreementPdf"
+                                                          iconName="doctype:pdf" 
+                                                          onclick="{!c.handlePdfSelection}"/>
+                    
+                    <lightning:verticalNavigationItemIcon label="Sözleşme PDF EN"
+                                                          name="CnrAgreementPdfInternational"
+                                                          iconName="doctype:pdf" 
+                                                          onclick="{!c.handlePdfSelection}"/>
+                    
+                </lightning:verticalNavigationSection>
+            </lightning:layoutItem>
+        </aura:if>
+        <aura:if isTrue="{!v.isFairPDF}">
+            <lightning:layoutItem padding="around-small">
+                <lightning:verticalNavigationSection label="Sözleşme Teklif Çıktıları">
+                    <lightning:verticalNavigationItemIcon label="Sözleşme PDF TR Template"
+                                                          name="CnrAgreementTrPdfTemplate"
+                                                          iconName="doctype:pdf" 
+                                                          onclick="{!c.handlePdfSelection}"/>
+                    
+                    <lightning:verticalNavigationItemIcon label="Sözleşme PDF EN Template"
+                                                          name="CnrAgreementInternationalPdfTemplate"
+                                                          iconName="doctype:pdf" 
+                                                          onclick="{!c.handlePdfSelection}"/>
+                    
+                </lightning:verticalNavigationSection>
+            </lightning:layoutItem>
+        </aura:if>
+    </lightning:layout>
+    
+    <lightning:layout horizontalAlign="center" multipleRows="true">
+        <lightning:layoutItem padding="around-small" size="12">
+            <center>
+                <p>Seçilen PDF: {!v.selectedPdfLabel}</p> 
+            </center>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="12">
+            <center>
+                <lightning:button name="View" label="Görüntüle" iconName="utility:preview" onclick="{!c.handleNavigate}" />
+            </center>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="12">
+            <center>
+                <aura:if isTrue="{!v.showErrorMessage}">
+                    <ui:message title="Error" severity="error" closable="true">
+                        PDF seçiniz!
+                    </ui:message>
+                </aura:if>
+            </center>
+        </lightning:layoutItem>
+        
+        
+    </lightning:layout>
+    
+</aura:component>

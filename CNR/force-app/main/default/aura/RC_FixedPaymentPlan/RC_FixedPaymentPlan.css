@@ -1,0 +1,18 @@
+.THIS .right{
+    float:right !important;
+}
+
+.THIS .slds-datepicker{
+    font-size: var(--lwc-fontSize2,0.75rem);
+    min-width: unset;
+    max-width: unset;
+    padding: unset;
+}
+
+
+
+@media screen and (max-width: 1400px) {
+	.THIS .res-container{
+        width: 75%;
+    }
+}

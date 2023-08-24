@@ -1,0 +1,121 @@
+<aura:component controller="RC_PortalController"  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="accept" type="List" default="['.jpg', '.jpeg', '.png', '.pdf']"/>
+    <aura:attribute name="multiple" type="Boolean" default="true"/>
+    <aura:attribute name="isExistFile" type="Boolean" default="false"/>
+    <aura:attribute name="accountProfile" type="List" default="[]"/>
+    <aura:attribute name="attachments" type="List" default="[]"/>
+    <aura:attribute name="opportunity" type="sObject" default="{}" />
+    <aura:attribute name="data" type="List" default="[]"/>
+    <aura:attribute name="columns" type="List" default="[]" />
+    <aura:attribute name="contact" type="sObject" default="{}" />
+    <aura:attribute name="standDesignCompanyList" type="List" default="[]"/>
+    <aura:attribute name="selectedStandDesignCompany" type="string" default=""/>
+    <aura:attribute name="vfMsgMethod" type="object" description="this attribute is for visualforce page javascript method"/>
+    <aura:attribute name="imageMini" type="String" />
+    
+    <c:RC_PortalHeader />
+    <div class="c-container">                        
+        <lightning:layout multipleRows="true">
+            <div class="main-container">
+                <lightning:layoutItem  size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem padding="" size="2">
+                            <c:RC_PortalLeftMenu />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="horizontal-medium" size="10">
+                            <div class="page-section">
+                                <ul class="slds-list_horizontal slds-has-inline-block-links_space" style = "border-bottom: 1px solid #eee; padding: 20px 0;">
+                                    <li> <a href="../s/firminfo" class="navigationlink">{!$Label.c.RC_PortalFirm_Title}</a></li> 
+                                    <li> <a href="../s/companyemployee" class="navigationlink">{!$Label.c.RC_PortalComponyEmployee_Title}</a></li> 
+                                    <li> <a href="../s/catalogue" class="navigationlink">{!$Label.c.RC_Portal_Catalogue}</a></li> 
+                                    <li> <a href="#" class="navigationlink active">{!$Label.c.RC_PortalBoothInfo}</a></li> 
+                                    <li> <a href="../s/badges" class="navigationlink">{!$Label.c.RC_PortalBadge}</a></li> 
+                                    <li> <a href="../s/invitation" class="navigationlink">{!$Label.c.RC_PortalInvitation}</a></li> 
+                                </ul>
+                            </div>
+                            <div class="page-section">
+                                <h2>{!$Label.c.RC_PortalBoothInfo}</h2>
+                            </div>
+                            <div class="page-section">
+                                <div style='display:flex;'>
+                                    <lightning:input aura:id="field" label="{!'Hall '+ $Label.c.RC_PortalLeft_Number}" class="form-control inputBorderBottom" value="{!v.opportunity.RC_Hall__c}" readonly="true" />
+                                    <lightning:input aura:id="field" label="{!'Stand '+ $Label.c.RC_PortalLeft_Number}" class="form-control inputBorderBottom" value="{!v.opportunity.RC_Stand__c}" readonly="true"/>
+                                    <lightning:input aura:id="field" label="{!$Label.c.RC_PortalBoothInfo_Areasize + ' (m2)'}" class="form-control inputBorderBottom" value="25" readonly="true"/>
+                                </div>
+                                <div style='display:flex;'>
+                                    <lightning:select aura:id="field" label="{!$Label.c.RC_PortalBoothInfo_Construction}" name="firmProf" class="form-control width_1-3" required="true" value="{!v.selectedStandDesignCompany}" onchange="{!c.changeStandDesign}">
+                                        <option text="{!$Label.c.RC_Portal_Choose}" value=""></option>
+                                        <aura:iteration items="{!v.standDesignCompanyList}" var="option">
+                                            <option text="{!option.label}" value="{!option.value}" selected="{!option.selected}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </div>
+                                <div style='display: flex;'>
+                                    <lightning:input name="file1" class="form-control" type="file" label="{!$Label.c.RC_PortalBoothInfo_StandDesing}" 
+                                                     multiple="{!v.multiple}" accept="{!v.accept}" onchange="{!c.handleFilesChange}"/>
+                                </div>
+                                <br/>
+                                <label lightning-input_input="" for="input-7" class="slds-form-element__label slds-no-flex">{!$Label.c.RC_PortalBoothInfo_PlainFile}</label>
+                                <div class="slds-box" style="display: block; width:fit-content;">
+                                    <aura:iteration items="{!v.attachments}" var="option" indexVar="indx">
+                                        <img id="imgMini" style="max-width:150px; max-height:75px;" src="{!v.imageMini}" alt="" /><br/>
+                                        <span style="font-weight:700;font-size:13px;">{!option.Name}</span>
+                                    </aura:iteration>
+                                </div>
+                                <br/>
+                                <aura:if isTrue="{!v.isExistFile}">
+                                    <lightning:button label="Temizle" iconName="utility:cancel_file_request" onclick="{!c.removeFiles}" iconPosition="left"  />
+                                </aura:if>
+                            </div>
+                            <div class="page-section">
+                                <h2>{!$Label.c.RC_PortalBooth_StandEmployee}</h2>
+                                <p>{!$Label.c.RC_PortalBooth_StandEmployeeDetail}</p> 
+                            </div>
+                            <div class="page-section">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-6">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalComponyEmployee_Name}" value="{!v.contact.FirstName}" name="firstname" class="form-control inputBorderBottom" required="true" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-6">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalComponyEmployee_Surname}" value="{!v.contact.LastName}" name="lastname" class="form-control inputBorderBottom" required="true" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-6">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalComponyEmployee_TitleF}" value="{!v.contact.Title}" name="title" class="form-control inputBorderBottom" required="true" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-6">
+                                        <lightning:input type="email" aura:id="field" label="{!$Label.c.RC_PortalFirm_Email}" value="{!v.contact.Email}" name="email" class="form-control inputBorderBottom" required="true" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-6" onkeypress="{!c.keyCheck}">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalFirm_Phone}" value="{!v.contact.MobilePhone}" name="gsm" class="form-control inputBorderBottom" required="true" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-6">
+                                        <lightning:button variant="brand" class='button' label="{!$Label.c.RC_Portal_Add}" onclick="{!c.addContactAction}" />
+                                    </div>
+                                </div>
+                                <div style='display:flex;'>
+                                    <lightning:datatable columns="{!v.columns}" data="{!v.data}" keyField="id" onrowaction="{!c.handleRowAction}" hideCheckboxColumn="true"/>
+                                </div>
+                            </div>
+                            <div class="page-footer">
+                                <div class='turnback'>
+                                    <lightning:button onclick="{!c.turnBack}" class="turnbackButton">
+                                        <i style="font-size: 32px;color: #888;">&lt;</i><span style="font-weight: 500;color: #888;padding: 6px 0px 0px 3px;">{!$Label.c.RC_Portal_Back}</span>
+                                    </lightning:button>
+                                </div>
+                                <div class='approve'>
+                                    <div class='approveL'>
+                                        <p>{!$Label.c.RC_Portal_SaveContinue}</p> 
+                                        <span>{!$Label.c.RC_PortalBadge}</span>
+                                    </div>
+                                    <div class='approve'>
+                                        <lightning:button class='approved' variant="brand" label=">" onclick="{!c.approve }" /></div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem> 
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </div>
+        </lightning:layout>
+    </div>
+</aura:component>

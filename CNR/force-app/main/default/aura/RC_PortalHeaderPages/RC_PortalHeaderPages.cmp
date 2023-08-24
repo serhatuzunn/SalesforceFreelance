@@ -1,0 +1,56 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="param" type="string" default="" />
+    <c:RC_PortalHeader />
+    <div class="c-container">                        
+        <lightning:layout multipleRows="true">
+            <div class="main-container">
+                <lightning:layoutItem  size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem flexibility="auto" padding="horizontal-medium" size="10">
+                            <aura:if isTrue="{!(v.param == 'help')}">
+                                <div class="page-section">
+                                    
+                                </div>
+                            </aura:if>
+                            <aura:if isTrue="{!(v.param == 'page=SSS')}">
+                                <div class="page-section sss">
+                                    <div class="s-title">SIKÇA SORULAN SORULAR</div>
+                                    <h5>Yaka kartımı nasıl basabilirim?</h5>
+                                    <p>
+                                        Katalog Bilgileri ve Stand Bilgileri adımlarını tamamladıktan sonra, Görevli Yaka Kartı ekranında fuarda görev alacak personelin bilgileri girilerek yazıcıdan toplu çıktı alınabilir.
+                                    </p>
+                                    <h5>Katalog bilgilerimi nasıl girebilirim?</h5>
+                                    <p>
+                                        Katalog Bilgileri ekranında Şirket bilgileri, tanıtım yazısı ve Logo’nuzu belirtilen tarihten önce yükleyerek Fuar Kataloğunda yer alabilirsiniz.
+                                    </p>
+                                    <h5>Kayıt portalı “server hatası” veriyor.</h5>
+                                    <p>
+                                        Ctrl + H tuşlayarak geçmişi temizleyip tekrar deneyiniz.
+                                    </p>
+                                    <h5>Katalog Bilgisi / Yaka Kartı sayfasındaki “Ekle” butonu aktif değil.</h5>
+                                    <p>
+                                        Tüm boş alanları doldurduktan sonra “Ekle” butonu aktif hale gelecektir.
+                                    </p>
+                                    <h5>Firma Logomu ekleyemiyorum.</h5>
+                                    <p>
+                                        Logonuzun formatının JPEG veya PNG olduğundan emin olunuz.
+                                    </p>
+                                    <h5>Katalog Tanıtım yazısının karakter sayısı yetersiz.</h5>
+                                    <p>
+                                        Katalog tasarımı gereği tanıtım yazısı Türkçe 300 ve Yabancı 300 karakter ile sınırlıdır.
+                                    </p>
+                                </div>
+                            </aura:if>
+                            <aura:if isTrue="{!(v.param == 'news')}">
+                                <div class="page-section">
+                                    
+                                </div>
+                            </aura:if>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </div>
+        </lightning:layout>
+    </div>                       
+</aura:component>

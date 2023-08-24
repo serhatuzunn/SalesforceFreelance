@@ -1,0 +1,80 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" controller="RC_FixedPaymentController" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="loading" type="boolean"  default="false" />
+    <aura:attribute name="paymentPlanList" type="RC_Payment_Plan_Values__c[]" />
+    <aura:attribute name="paymentTypes" type="sObject" default="[]" ></aura:attribute>
+    <aura:attribute name="disabled" type="boolean" default="false"/>
+    
+    <aura:if isTrue="{!v.loading}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <div class="c-container">
+        
+        <span style="font-size:18px;"><b>Sabit Ödeme Planı</b></span>
+        <br/>
+        <br/>
+        
+        <lightning:layout  multipleRows="true">
+            <lightning:layoutItem padding="around-small" class="res-container" size="5">
+                <div class="slds-box">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col" width="5%">
+                                    <div class="slds-truncate">Installment</div>
+                                </th>
+                                <th class="" scope="col" width="20%">
+                                    <div class="slds-truncate">Installment Percentage</div>
+                                </th>
+                                <th class="" scope="col" width="35%">
+                                    <div class="slds-truncate">Installment Date</div>
+                                </th>
+                                <th class="" scope="col" width="20%">
+                                    <div class="slds-truncate">Installment Type</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.paymentPlanList}" var="item" indexVar="index">
+                                <tr  class="slds-text-title_caps">
+                                    <td>
+                                        {!item.RC_Is_Tax_Payment__c ? 'KDV' :item.RC_Is_Advance_Payment__c ? 'Peşinat' : item.RC_Installment_Number__c}
+                                    </td>
+                                    <td>
+                                        <lightning:input aura:id="fieldId" disabled="{!v.disabled}" required="true" type="number" max="100" formatter="decimal" step="0.1" value="{!item.RC_Installment_Percentage__c}"></lightning:input>
+                                    </td>
+                                    <td>
+                                        <lightning:input aura:id="fieldId" disabled="{!v.disabled}" required="true" type="date" value="{!item.RC_Installment_Date__c}"></lightning:input> 
+                                    </td>
+                                    <td>
+                                        <lightning:select aura:id="fieldId" disabled="{!v.disabled}" required="true" value="{!item.RC_Installment_Payment_Type__c}">
+                                            <option label="Select" value="">Select</option>
+                                            <aura:iteration items="{!v.paymentTypes}" var="opt">
+                                                <option label="{!opt.label}" value="{!opt.value}">{!opt.value}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </td>
+                                </tr>
+                            </aura:iteration>                        
+                        </tbody>
+                    </table>
+                    
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout><br/>
+        <lightning:layout  multipleRows="true">
+            <lightning:layoutItem padding="around-small" size="5">
+                <lightning:button label="Kaydet" disabled="{!v.disabled}" class="slds-button slds-button_brand right" onclick="{!c.SaveFixedPayment}">Kaydet</lightning:button>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    
+</aura:component>

@@ -1,0 +1,74 @@
+<aura:component controller="RC_PortalController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/> 
+    <aura:attribute name="SessionId" type="string" default="" />
+    <aura:attribute name="fairId" type="string" default="" />
+    <aura:attribute name="data" type="List" default="[]"/>
+    <aura:attribute name="columns" type="List" default="[]" />
+    <aura:attribute name="invitation" type="sObject" default="{}" />
+    <c:RC_PortalHeader />
+    <div class="c-container">                        
+        <lightning:layout multipleRows="true">
+            <div class="main-container">
+                <lightning:layoutItem  size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem padding="" size="2">
+                            <c:RC_PortalLeftMenu childAttribute="{!v.fairId}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="horizontal-medium" size="10">
+                            <div class="page-section">
+                                <ul class="slds-list_horizontal slds-has-inline-block-links_space" style = "border-bottom: 1px solid #eee; padding: 20px 0;">
+                                    <li> <a href="../s/firminfo" class="navigationlink">{!$Label.c.RC_PortalFirm_Title}</a></li> 
+                                    <li> <a href="../s/companyemployee" class="navigationlink">{!$Label.c.RC_PortalComponyEmployee_Title}</a></li> 
+                                    <li> <a href="../s/catalogue" class="navigationlink">{!$Label.c.RC_Portal_Catalogue}</a></li> 
+                                    <li> <a href="../s/standinfo" class="navigationlink">{!$Label.c.RC_PortalBoothInfo}</a></li> 
+                                    <li> <a href="../s/badges" class="navigationlink">{!$Label.c.RC_PortalBadge}</a></li> 
+                                    <li> <a href="#" class="navigationlink active">{!$Label.c.RC_PortalInvitation}</a></li> 
+                                </ul>
+                            </div>
+                            <div class="page-section">
+                                <h2>{!$Label.c.RC_PortalInvitation}</h2>
+                            </div>
+                            <div class="page-section">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalComponyEmployee_Name +' '+ $Label.c.RC_PortalComponyEmployee_Surname}" value="{!v.invitation.RC_FullName__c}" name="firstname" class="form-control inputBorderBottom" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning:input type="email" aura:id="field" label="{!$Label.c.RC_PortalFirm_Email}" value="{!v.invitation.RC_Email__c}" name="email" class="form-control inputBorderBottom" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1" onkeypress="{!c.keyCheck}">
+                                        <lightning:input aura:id="field" label="{!$Label.c.RC_PortalInvitation_InvitationCount}" value="{!v.invitation.RC_Reserved__c}" name="quantity" class="form-control inputBorderBottom" type="number" min="0"/>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-5">
+                                        <lightning:button class='addButton' variant="brand" label="{!$Label.c.RC_Portal_Add}" onclick="{!c.addInvitationAction}" />
+                                    </div>
+                                </div>
+                                <br/><br/>
+                                <span style="font-weight: bold;" >{!$Label.c.RC_PortalInvitation_InvitedGuests}</span>
+                                <p>{!$Label.c.RC_PortalInvitation_InvitedGuestsDetail}</p>
+                                <div class="divDisp">
+                                    <lightning:datatable columns="{!v.columns}" data="{!v.data}" keyField="id" onrowaction="{!c.handleRowAction}" hideCheckboxColumn="true" />
+                                </div>
+                            </div>
+                            <div class="page-footer">
+                                <div class='turnback'>
+                                    <lightning:button onclick="{!c.turnBack }" class="turnbackButton">
+                                        <i style="font-size: 32px;color: #888;">&lt;</i><span style="font-weight: 500;color: #888;padding: 6px 0px 0px 3px;">{!$Label.c.RC_Portal_Back}</span>
+                                    </lightning:button>
+                                </div>
+                                <div class='approve'>
+                                    <div class='approveL'>
+                                        <p>{!$Label.c.RC_Portal_SaveContinue}</p> 
+                                        <span></span>
+                                    </div>
+                                    <div class='approve'>
+                                        <lightning:button class='approved' variant="brand" label=">" onclick="{!c.approve }" /></div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem> 
+                    </lightning:layout>
+                </lightning:layoutItem>                
+            </div>
+        </lightning:layout>
+    </div>
+</aura:component>

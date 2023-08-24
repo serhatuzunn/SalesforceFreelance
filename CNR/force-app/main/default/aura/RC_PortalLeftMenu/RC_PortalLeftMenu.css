@@ -1,0 +1,82 @@
+.THIS.c-container {
+    border: 1px solid #d8dde6;
+    margin: 10px 0 20px 0;
+}
+.THIS .page-section {
+    padding: 1rem;
+}
+
+.THIS .page-section h2{
+    font-weight:bold;
+    font-size:25px;
+    padding: 1rem;
+}
+
+.THIS .page-main {
+    background: #f8f8f8;
+}
+
+.THIS .left-menu{
+    padding: 1rem;  
+    background: #f0efef;
+    border-radius: 5px;
+    background-color: #F2F2F2;
+    text-align: center;
+    height: 100%;
+    max-height: 200px;
+    min-height: 280px;
+}
+.THIS .mgTop{
+    margin-top: 2px;
+}
+.THIS .testClass{
+    
+    background-color:black;
+}
+.THIS .left-menu p{
+    color:#566CB7;
+    font-weight:bold;
+}
+.THIS .date{
+    padding: inherit;
+}
+.THIS .date span{
+    color: #566cb7;
+    font-weight: bold;
+    font-size: 14px; 
+}
+.THIS .date p{
+    color:rgba(0, 0, 0, 0.87);
+}
+.THIS .date{
+    padding: inherit;
+}
+.THIS .left-menu h3{
+    padding: 1rem;
+    font-weight: normal;
+    font-size: 17px;
+}
+.THIS .left-menu h2{
+    font-size: 21px;
+    float: left;
+    padding: 2%;
+}
+
+.THIS .spn{
+    font-size: 16px;
+    font-weight: 700;
+    vertical-align: middle;
+    padding: 0 20px;
+    width: 50%;
+}
+
+.THIS .fc{
+    border-right: 1px solid #aaa;
+}
+
+.THIS .spn p{
+    font-weight: normal;
+    font-size: 80%;
+    display: block;
+    color: rgba(0, 0, 0, 0.87);
+}

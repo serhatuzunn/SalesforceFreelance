@@ -1,0 +1,91 @@
+<template>
+    <lightning-card title="Hello CNR" icon-name="custom:custom14">
+        <div class="slds-m-around_medium">
+            <div id="myModal" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div class="modelDiv">
+                    </div>
+                </div>
+
+            </div>
+            <div class="headerDiv">
+
+
+                <nav class="main-nav" id="main-nav">
+                    <ul class="main-sections">
+                        <li style="width: 200px;"><img style="width: 160px;padding: 8%;" src={IMG_LOGO} /></li>
+                        <li class="articles">
+                            <img style='width: 30px;
+                height: 30px;' src={IMG_PARCEL} />
+                            <button type="button" class="btn btn-default modeButton" value="Design">Add Parcel</button>
+
+                        </li>
+                        <li class="videos">
+                            <img style='width: 30px;
+                height: 30px;' src={IMG_SAVE512} />
+                            <button type="button" class="btn btn-default modeButton" value="Save">Save Parcel</button>
+                        </li>
+                        <li class="snippets">
+                            <img style='width: 30px;
+                height: 30px;' src={IMG_SELL} />
+                            <button type="button" class="btn btn-default modeButton" value="Sale">Sale</button>
+                        </li>
+                        <li class="newsletter">
+                            <img style='width: 30px;
+                height: 30px;' src={IMG_SELL2} />
+                            <button type="button" class="btn btn-default modeButton" value="Approve">Approve</button>
+                        </li>
+                        <li class="jobs">
+                            <img style='width: 30px;
+                height: 30px;' src={IMG_AVAILABLE} />
+                            <button type="button" class="btn btn-default commandButton" value="Sellable">Sellable
+                                Block</button>
+                        </li>
+                        <li class="guides">
+                            <img style='width: 30px;
+                height: 30px;' src={IMG_NOTAVAILABLE} />
+                            <button type="button" class="btn btn-default commandButton" value="Not Sellable">Not
+                                Sellable Block</button>
+
+                        </li>
+                        <li>
+                            <img style='width: 30px;
+                height: 30px;' src={IMG_SAVE2} />
+                            <button type="button" class="btn btn-default saveButton" value="Save Layout">Save
+                                Layout</button>
+                        </li>
+                    </ul>
+
+
+                </nav>
+            </div>
+            <h3 style="margin-left: 50%;margin-top: 0%;">HALL 5</h3>
+            <div class="divAllContent">
+                <div class="currentDiv">
+                    <div class="currentTool">Current Tool : Sellable</div>
+                    <div class="currentMode">Current Mode : Design</div>
+                    <img src={IMG_HALLBackgroundLeftSide} style="    width: 24%;
+    margin-top: 0%;
+    margin-left: 40%;" />
+                </div>
+                <div class="maindiv" style={IMG_HALLBackground} >
+                <!-- <div class="maindiv"  > -->
+                    
+              
+                            <div class="floorplan" lwc:dom="manual">
+
+
+                          
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </lightning-card>
+
+
+</template>

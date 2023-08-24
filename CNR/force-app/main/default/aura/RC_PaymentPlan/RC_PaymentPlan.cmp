@@ -1,0 +1,259 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="RC_PaymentPlanController" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="loading" type="boolean"  default="false" />
+    <aura:handler name="DeleteRowEvt" event="c:DeleteRowEvt" action="{!c.removeDeletedRow}"/>
+    <aura:handler name="AddRowEvt" event="c:AddNewRowEvt" action="{!c.addNewRow}"/>
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="paymentPlanList" type="RC_Payment_Plan__c[]" />
+    <aura:attribute name="calculated" type="boolean" default="false"/>
+    <aura:attribute name="dateError" type="boolean" default="false"/>
+    <aura:attribute name="paymentTypeList" type="sObject" default="[]" />
+    <aura:attribute name="AvgPayDate" type="string" default=""></aura:attribute>
+    <aura:attribute name="diffDate" type="string" default=""></aura:attribute>
+    <aura:attribute name="initWrapper" type="sObject" default=""></aura:attribute>
+    <aura:attribute name="isEmptyPlan" type="boolean" default="false"/>
+    <aura:attribute name="calcTotalPayment" type="decimal" default="0.00" />
+    <aura:attribute name="calcInstPayment" type="decimal" default="0.00" />
+    <aura:attribute name="hasPaymentValue" type="boolean" default="true"/>
+    <aura:attribute name="cashActive" type="boolean" default="true"/>
+    <aura:attribute name="instActive" type="boolean" default="false"/>
+    <aura:attribute name="cashPayment" type="boolean" default="false"/>
+    <aura:attribute name="moneyOrder" type="boolean" default="false"/>
+    <aura:attribute name="approvalStage" type="string" default="false"/>
+    <aura:attribute name="userProfile" type="string" default=""/>
+    <aura:attribute name="disabled" type="boolean" default="true"/>
+    <aura:attribute name="disabledDoc" type="boolean" default="true"/>
+    <aura:attribute name="fixedPayment" type="boolean" default="false"/>
+    <aura:attribute name="hasCalculateTrue" type="boolean" default="false"/>
+    <aura:attribute name="cashDisabled" type="boolean" default="false"/>
+    <aura:attribute name="fixedPay" type="boolean" default="false"/>
+    <aura:attribute name="currIsoCode" type="string" default=""/>
+    
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="isAdvancePaymentValid" type="boolean" default="false"/>
+    <aura:attribute name="advancePaymentValidationMessage" type="string" default="false"/>
+
+    <form class="theme">
+    <aura:if isTrue="{!v.loading}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <div class="c-container">
+        
+        <lightning:layout  multipleRows="true">
+            <lightning:layoutItem padding="around-small"  size="3" class="payment-box mobilebox">
+                <label class="label-font">Toplam Ödeme Tutarı</label><br/>
+                <div style="margin-top: 3px;border: 1px solid lightgray;background: #ecebea;height: 32px !important;" class="slds-box slds-box_x-small mobilemargin" disabled="true"><lightning:formattedNumber disabled="true" value="{!v.initWrapper.opportunity.RC_Final_Total__c}" currencyDisplayAs="code" currencyCode="{!v.initWrapper.opportunity.CurrencyIsoCode}" style="currency" />
+                  
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small"  size="3">
+                <div class="custom-box res-op">
+                    <lightning:input type="date" name="input7" label="Ortalama Vade Tarihi"  value="{!v.initWrapper.opportunity.RC_Average_Maturity_Date__c}" disabled="true"></lightning:input>
+                    
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="3">
+                <div class="custom-box">
+                    <lightning:input type="number" name="input5"  value="{!v.initWrapper.opportunity.RC_Average_Maturity_Days__c}" label="Vade Gün Sayısı" disabled="true"></lightning:input>
+                    
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem  padding="around-small"  size="3">
+                <div class="custom-box">
+                    <lightning:input type="number" name="input5" disabled="true"  value="{!v.initWrapper.opportunity.RC_Number_of_Installments__c}" label="Taksit Adedi"></lightning:input>
+                </div>
+            </lightning:layoutItem> 
+            
+            <lightning:layoutItem  padding="around-small"  size="3">
+                <div class="custom-box">
+                    <lightning:input type="text" name="input16" disabled="true"  value="{!v.initWrapper.fairInfo.RC_Start_Date__c}" label="Fuar Başlangıç Tarihi"></lightning:input>
+                </div>
+            </lightning:layoutItem> 
+            <lightning:layoutItem  padding="around-small"  size="3">
+                <div class="custom-box">
+                    <lightning:input type="text" name="input17" disabled="true"  value="{!v.initWrapper.fairInfo.RC_End_Date__c}" label="Fuar Bitiş Tarihi"></lightning:input>
+                </div>
+            </lightning:layoutItem> 
+            
+            <lightning:layoutItem  padding="around-small" class="payment-type"  size="3">
+                <div class="custom-box res-type">
+                    <label style="font-size:12px;">Ödeme Tipi</label><br/>
+                    <aura:if isTrue="{!v.cashActive}">
+                        <lightning:button aura:id="btnCashPay1" disabled="{!not(v.approvalStage=='Negotiation') || v.cashDisabled}" class="slds-button res-type-btn slds-button_outline-brand margin-top" onclick="{!c.cashPayment}">Peşin Öde</lightning:button>
+                    </aura:if>
+                    <aura:if isTrue="{!v.instActive}">
+                        <lightning:button aura:id="btnCashPay2" disabled="{!not(v.approvalStage=='Negotiation') || v.cashDisabled}" class="slds-button slds-button_brand margin-top" onclick="{!c.instPayment}">Taksitle Öde</lightning:button>
+                    </aura:if>
+                    
+                </div>
+            </lightning:layoutItem> 
+            
+            
+        </lightning:layout>
+        
+        <aura:if isTrue="{!v.hasPaymentValue}">
+            <lightning:layout    multipleRows="true">
+                <aura:if isTrue="{!v.fixedPay}">
+                    <span style="margin-left:15px;"><lightning:icon iconName="utility:warning" alternativeText="Warning!" variant="warning"/><b>Fuara ait ödeme planı değiştirilemez.</b></span>
+                </aura:if>
+                <span></span>
+                <lightning:layoutItem  padding="around-small" class="res-div"  size="10">
+                    <div class="slds-box res-table">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered responsive-space">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col" width="5%">
+                                        <div class="slds-truncate">Taksit</div>
+                                    </th>
+                                    <th class="price" scope="col">
+                                        <div class="slds-truncate">Tutar</div>
+                                    </th>
+                                    <th class="" scope="col" width="35%">
+                                        <div class="slds-truncate">Tarih</div>
+                                    </th>
+                                    <th class="" scope="col" width="20%">
+                                        <div class="slds-truncate">Ödeme Türü</div>
+                                    </th>
+                                    <th class="" scope="col" width="5%">
+                                        <div class="slds-truncate">Satış</div>
+                                    </th>
+                                    <th class="" scope="col" width="5%">
+                                        <div class="slds-truncate">Tahsilat</div>
+                                    </th>
+                                    <th class="" scope="col" width="5%">
+                                        <div class="slds-truncate">Finans</div>
+                                    </th>
+                                    <th class="" scope="col" width="5%">
+                                        <div class="slds-truncate">Kur Bilgisi</div>
+                                    </th>
+                                    <th class="" scope="col" width="5%">
+                                        <div class="slds-truncate">İşlem</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <aura:iteration items="{!v.paymentPlanList}" var="item" indexVar="index">
+                                    <c:RC_PaymentRowItem currencyIsoCode="{!v.currIsoCode}" fixedPayValue="{!v.fixedPay}" paymentPlanInstance="{!item}" userProfile="{!v.userProfile}" approvalStage="{!v.approvalStage}" moneyOrder="{!v.moneyOrder}" cashPayment="{!v.cashPayment}" rowIndex="{!index}" />
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                        <br/>
+                        
+                        <lightning:button aura:id="btnSave" class="slds-button slds-button_brand" disabled="true" onclick="{!c.openModel}" label="Kaydet"></lightning:button>
+                        <lightning:button aura:id="btnCalculate"  class="slds-button slds-button_success" disabled="{!v.disabled}" label="Hesapla" onclick="{!c.calculate}">Hesapla</lightning:button>
+                        <button class="slds-button slds-button_outline-brand" disabled="{!v.disabledDoc}" onclick="{!c.CheckSave}">Evrakları Teslim Aldım</button></div>
+                </lightning:layoutItem>
+                
+                <aura:if isTrue="{!v.dateError}">
+                    <lightning:layoutItem  padding="around-small" class="res-div"  size="2">
+                        <div class="slds-box res-calc">
+                            <span><lightning:icon iconName="utility:error" alternativeText="Error!" variant="error"/>İlgili ayın 25'inden sonra ödeme yapılamaz.</span>
+                        </div>
+                    </lightning:layoutItem>
+                </aura:if>
+                <aura:if isTrue="{!v.calculated}">
+                    <lightning:layoutItem  padding="around-small" class="res-div"  size="2">
+                        <div class="slds-box res-calc">
+                            
+                            <span class="font-big"><b class="font-big">Kalan Tutar:</b>{!v.calcTotalPayment}
+                            <span><lightning:icon class="showIcon" aura:id="iconWarning" visible="false" iconName="utility:error" size="small" alternativeText="Warning!" variant="warning"/></span>
+                            </span><br/>
+                            <span class="font-big"><b class="font-big">Hes. Ort. Vade Tarihi:</b> {!v.AvgPayDate}</span><br/>
+                            <span class="font-big"><b class="font-big">Gün Farkı:</b> {!v.diffDate}</span><br/>
+                            
+                            <aura:if isTrue="{!greaterthan(v.diffDate,v.initWrapper.fairInfo.RC_Sales_Person_Maturity_Day__c)}">
+                                <span><lightning:icon iconName="utility:warning" alternativeText="Warning!" variant="warning"/>Hesaplanan Ortalama Vade Tarihi  (+/-){!v.initWrapper.fairInfo.RC_Sales_Person_Maturity_Day__c} gün limitinin üzerindedir, onaya gönderilecektir.</span>
+                            </aura:if>
+                        </div>
+                    </lightning:layoutItem></aura:if>
+            </lightning:layout>
+            <aura:set attribute="else">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem  padding="around-small"  size="9">
+                        <div class="slds-box res-calc">
+                            <b>Ödeme Planı oluşturmak için sözleşme tutarı girilmelidir.</b>
+                        </div>
+                    </lightning:layoutItem>
+                    
+                </lightning:layout>
+            </aura:set>
+        </aura:if>
+        
+        
+        
+        <div class="slds-m-around_xx-large">
+            <aura:if isTrue="{!v.isModalOpen}">
+                
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Ödeme Planı Onay</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <p><b>Ödeme Planını kaydetmek istediğinizden emin misiniz ? Yeni ödeme planı oluşturulduğunda, eski ödeme planınız silinecektir.
+                                </b>
+                            </p>
+                        </div>
+                        
+                        <footer class="slds-modal__footer">
+                            <lightning:button variant="neutral"
+                                              label="Cancel"
+                                              title="Cancel"
+                                              onclick="{! c.closeModel }"/>
+                            <lightning:button variant="brand"
+                                              label="OK"
+                                              title="OK"
+                                              onclick="{!c.Save}"/>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+            <aura:if isTrue="{!v.isAdvancePaymentValid}">
+                
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Peşinat Değer Kontrol</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <p>
+                                <aura:unescapedHtml value="{!v.advancePaymentValidationMessage}"/>                                
+                            </p>
+                        </div>
+                        
+                        <footer class="slds-modal__footer">
+                            <lightning:button variant="brand"
+                                              label="OK"
+                                              title="OK"
+                                              onclick="{!c.closeModel }"/>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>
+    </div>
+    </form>
+</aura:component>

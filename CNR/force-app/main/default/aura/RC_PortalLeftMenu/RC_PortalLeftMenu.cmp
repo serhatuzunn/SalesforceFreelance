@@ -1,0 +1,27 @@
+<aura:component controller="RC_PortalController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:attribute name="childAttribute" type="string"/>
+    <aura:attribute name="fair" type="sObject" default="{}" />
+    <aura:attribute name="opportunity" type="sObject" default="{}" />
+    <aura:attribute name="imageLink" type="String" default="" />
+    <div>
+        <div class="left-menu">
+            <img src="{!v.imageLink}" alt="" height="90"/>
+            <div class='date'>
+                <p>{!$Label.c.RC_PortalLeft_Date}</p>
+                <span>{!v.fair.RC_Start_Date__c}</span>
+            </div>
+        </div>
+        <div class="left-menu mgTop">
+            <h3>{!v.opportunity.Name}</h3>
+            <a href="firminfo"><p>{!$Label.c.RC_PortalLeft_FirmInfo}</p></a><br/>
+            <div>
+                <span class="spn fc" style="float:left;padding-left:20%;">{!v.opportunity.RC_Hall__c} <br/> <p>Hall <!--<br/>{!$Label.c.RC_PortalLeft_Number}--></p> </span>
+                <span class="spn" style="float:right;padding-right:30%">{!v.opportunity.RC_Stand__c} <br/> <p>Stand <!--<br/>{!$Label.c.RC_PortalLeft_Number}--></p></span>
+            </div>
+        </div>
+        <div class="left-menu mgTop">
+            <!--<h2 style='color:rgba(0, 0, 0, 0.87);'>{!$Label.c.RC_PortalLeft_News}</h2>-->
+        </div>
+    </div>
+</aura:component>

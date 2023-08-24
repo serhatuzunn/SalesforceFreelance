@@ -1,0 +1,34 @@
+<aura:component controller="RC_PortalController" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <c:RC_PortalHeader />
+    <div class="c-container">                        
+        <lightning:layout multipleRows="true">
+            <div class="main-container">
+                <lightning:layoutItem  size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem padding="" size="12">
+                            <div class="page-section">
+                                <h1>{!$Label.c.RC_PortalAggrement_Title}</h1><br/>
+                                <p>{!$Label.c.RC_PortalAggrement_BodyP1}&nbsp;{!$Label.c.RC_PortalAggrement_BodyP1_2}</p>
+                                <br/><p>{!$Label.c.RC_PortalAggrement_BodyP2}</p>                                    
+                                <br/><p>{!$Label.c.RC_PortalAggrement_BodyP3}</p>  
+                            </div>
+                        </lightning:layoutItem> 
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </div>
+            <lightning:layoutItem flexibility="auto" padding="around-small" size="12">
+                <div class="page-footer">
+                    <div class='approve'>
+                        <div class='approveL'>
+                            <p>{!$Label.c.RC_Portal_IAccept}</p> 
+                            <span>{!$Label.c.RC_Portal_SaveContinue} </span>
+                        </div>
+                        <div class='approve'>
+                            <lightning:button class='approved' variant="brand" label=">" onclick="{!c.approve }" /></div>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+</aura:component>

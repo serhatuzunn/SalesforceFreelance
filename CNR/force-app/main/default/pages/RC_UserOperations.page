@@ -1,0 +1,17 @@
+<apex:page >
+    <apex:includeLightning />
+    <div id="context" />
+    <script>
+    var token = "{!$CurrentPage.parameters.token}";
+    debugger;
+    $Lightning.use("c:RC_PortalApp", function() {
+        $Lightning.createComponent(
+            "c:RC_UserOperations",
+            {token : token},
+            "context",
+            function(cmp) {
+                console.log(cmp);
+            });
+    });
+    </script>
+</apex:page>

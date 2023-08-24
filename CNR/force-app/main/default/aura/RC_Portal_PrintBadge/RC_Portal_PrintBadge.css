@@ -1,0 +1,146 @@
+.THIS .page {
+    position: relative;
+    width: 200mm;
+    max-height: 278mm;
+    padding: 0;
+    margin: 0 auto;
+    margin-top: 12mm !important;
+    /*border: 1px #D3D3D3 solid;*/
+    background: white;
+    /*box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);*/
+}
+
+.THIS .printButton{
+    /*float: right;*/
+}
+
+.THIS .ticket-date {
+    position: absolute;
+    top: 45px;
+    right: 55px;
+    text-align: right;
+}
+
+.THIS .subpage {
+    padding-left: 4mm;
+    padding-top: 4mm;
+    border: 1px white solid;
+    height: 278mm;
+}
+
+.THIS .ticket-main {
+    /*margin: 15px 0 10px 0;*/
+}
+
+.THIS .page2 {
+    position: relative;
+    margin-top: 10mm;
+}
+
+.THIS .page2 {
+    float: left;
+    width: 50%;
+    min-height: 130mm;
+    padding: 0;
+    border: 1px #D3D3D3 solid;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.THIS .t-logo {
+    display: table;
+    width: 100%;
+    /*height: 75px;*/
+    height: 100px;
+}
+
+.THIS .ticket-main p {
+    font-size: 14px;
+    line-height: 19px;
+    margin-bottom: 10px;
+    height: 135px;
+    overflow: hidden;
+}
+
+.THIS .t-logo p {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center !important;
+    padding: 10px 0;
+    height: auto !important;
+}
+
+.THIS .title-exhibitors {
+    padding: 0;
+    color: #fff;
+    font-size: 20px;
+}
+
+.THIS .t-logo p span {
+    position: relative;
+    top: -50%;
+}
+
+.THIS .main-text {
+    padding-top: 25px;
+    font-family: "Arial", sans-serif !important;
+}
+
+.THIS .main-text div {
+    display: block;
+    padding: 10px 0 !important;
+}
+
+.THIS .main-text h3 {
+    display: block;
+    padding: 0;
+    margin: 0;
+    font-size: 24px;
+}
+
+.THIS .main-text h4 {
+    display: block;
+    padding: 2px 0 !important;
+    margin: 0;
+    font-size: 18px;
+}
+
+.THIS .title-holding {
+    width: 100%;
+    padding: 0;
+    color: #fff;
+    font-size: 20px;
+    position: absolute;
+    bottom: 20px;
+}
+
+.THIS .book:last-child{
+    page-break-after: auto;
+}
+
+@media print{
+    /*
+    .THIS .Header{
+        display: none !important;
+    } 
+    
+    .THIS .page2{ 
+        page-break-after: always;
+   
+    
+    .THIS .page{
+        margin: 0;
+    }
+    
+    .THIS .body{
+        margin: 0mm;
+    }
+    
+    .THIS .page{
+        margin: 0mm;
+    }
+    
+    .THIS .body{
+        margin: 1.6cm;
+    }*/
+}
